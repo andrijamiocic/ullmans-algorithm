@@ -2,6 +2,8 @@
 #include <vector>
 #include <string>
 /*
+TEST VECTOR INITIALIZATION!! (allocating on initialization)
+
 graph class: 
 - file constructor, random graph constructor
 - file output function
@@ -37,5 +39,9 @@ private:
     std::vector<std::vector<int>> adj_list;
 
     void insertEdge(int v1, int v2, int directed); 
+
+    friend std::vector<std::vector<int>> M0(const Graph& G, const Graph& H); // root matrix for search tree (G < H ?) (undirected for now)
+
+    friend void findIsomporphism(const Graph& G, const Graph& H);
 
 };

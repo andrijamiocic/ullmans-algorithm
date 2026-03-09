@@ -62,6 +62,7 @@ void Graph::printAdjMatrix() {
         }
         std::cout << std::endl;
     }
+    std::cout << std::endl;
     return;
 }
 
@@ -73,6 +74,7 @@ void Graph::printAdjList() {
         }
         std::cout << std::endl;
     }
+    std::cout << std::endl;
     return;
 }
 
@@ -86,5 +88,25 @@ void Graph::insertEdge(int v1, int v2, int directed) {
     }
     e_num++;
     return;
+}
+
+std::vector<std::vector<int>> M0(const Graph& G, const Graph& H){
+    // G must have a lesser number of vertices to have an isomorphism subgraph
+    if ( G.v_num > H.v_num ) {
+        return {};
+    }
+    std::vector<std::vector<int>> M0;
+    for ( int i = 0; i < G.v_num; i++ ) {
+        M0.push_back({}); // testirati dobro - koju je bolje prije napuniti
+        for ( int j = 0; j < H.v_num; j++ ) {
+            if ( G.adj_list[i].size() <= H.adj_list[j].size() ) {
+                M0[i].push_back(1);
+
+            }else{
+                M0[i].push_back(0);
+            }
+        }
+    }
+    return M0;
 }
 
