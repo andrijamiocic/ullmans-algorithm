@@ -6,7 +6,8 @@
 #include <vector>
 #include <random>
 
-Graph::Graph(std::string filename, int directed) {
+Graph::Graph(std::string filename, int dir) {
+    directed = dir;
     std::ifstream FILE(filename + ".txt");
     std::string line;
     int v1, v2;
@@ -30,7 +31,8 @@ Graph::Graph(std::string filename, int directed) {
     }
 }
 
-Graph::Graph(int v_number, double p, int directed){
+Graph::Graph(int v_number, double p, int dir){
+    directed = dir;
     v_num = v_number;
     e_num = 0;
     adj_matrix = {};
@@ -88,25 +90,5 @@ void Graph::insertEdge(int v1, int v2, int directed) {
     }
     e_num++;
     return;
-}
-
-std::vector<std::vector<int>> M0(const Graph& G, const Graph& H){
-    // G must have a lesser number of vertices to have an isomorphism subgraph
-    if ( G.v_num > H.v_num ) {
-        return {};
-    }
-    std::vector<std::vector<int>> M0;
-    for ( int i = 0; i < G.v_num; i++ ) {
-        M0.push_back({}); // testirati dobro - koju je bolje prije napuniti
-        for ( int j = 0; j < H.v_num; j++ ) {
-            if ( G.adj_list[i].size() <= H.adj_list[j].size() ) {
-                M0[i].push_back(1);
-
-            }else{
-                M0[i].push_back(0);
-            }
-        }
-    }
-    return M0;
 }
 

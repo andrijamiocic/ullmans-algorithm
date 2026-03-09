@@ -1,5 +1,6 @@
 #include <iostream>
 #include "graph.h"
+#include "SIalgorithms.h"
 
 void print_matrix(std::vector<std::vector<int>>& v) {
     for ( std::vector<int> v1 : v ) {
@@ -19,7 +20,8 @@ int main(){
     G.printAdjList();
     //G.printAdjMatrix();
     H.printAdjList();
-    std::vector<std::vector<int>> M = M0(G, H);
-    print_matrix(M);
+    SubIsoFinder s;
+    //std::vector<std::vector<int>> M = s.M0(G, H);
+    //print_matrix(M);
     return 0;
 }
