@@ -1,36 +1,93 @@
 #include "SIalgorithms.h"
+#include <iostream>
 
-std::vector<std::vector<int>> SubIsoFinder::M0( const Graph& G, const Graph& H ) {
+void print_vector(std::vector<int>& v){
+    for (int i : v){
+        std::cout << i << " ";
+    }
+    std::cout << std::endl;
+    return;
+}
+
+void DepthFirstSearch::M0() {
     int g_n = G.get_v_num();
     int h_n = H.get_v_num();
     // G must have a lesser number of vertices to have an isomorphism subgraph
-    if ( g_n > h_n ) {
-        return {};
-    }
-    std::vector<std::vector<int>> M0;
+    if ( g_n > h_n ) { return; }
     for ( int i = 0; i < g_n; i++ ) {
-        M0.push_back({}); // testirati dobro - koju je bolje prije napuniti
+        M_0.push_back({}); // testirati dobro - koju je bolje prije napuniti
         for ( int j = 0; j < h_n; j++ ) {
             if ( G.degree(i+1) <= H.degree(j+1) ) {
-                M0[i].push_back(1);
-
-            }else{
-                M0[i].push_back(0);
+                M_0[i].push_back(1);
+            }else {
+                M_0[i].push_back(0);
             }
         }
     }
-    return M0;
+    return;
 }
 
-/*int findIsomporphism(const Graph& G, const Graph& H) {
-    std::vector<std::vector<int>> m_root = M0(G, H);
-    std::vector<int> used_columns(H.v_num); // used_columns[k] = 1 if k-th column is already chosen
-    std::vector<int> column(G.v_num);  // column[d] = k if column k is chosen on depth d
-    int depth = 0;
-    column[0] = 0;
-    while ( 1 ) {
-        // if there are no more children nodes, go up on the tree
-        if ( column[depth]  )
+int DepthFirstSearch::next_k(int k) {
+    if ( depth == g_n ) {return -1;}
+    while ( k < h_n - 1 ) {
+        k++;
+        if ( !paired_verteces[k] && M_0[depth][k]) {
+            return k;
+        }
     }
+    return -1;
+}
 
-}*/
+int DepthFirstSearch::checkIsomorphism(){
+    for ( int i = 0; i < g_n;  i++ ){
+        for ( int j = i + 1; j < g_n; j++ ){
+            if ( G.edge(i+1, j+1) && !H.edge(column_chosen[i]+1, column_chosen[j]+1) ){return 0;}
+        }
+    }
+    std::vector<int> isomorphism;
+    for (int v : column_chosen){
+        isomorphism.push_back(v+1);
+    }
+    isomorphism_found.push_back(isomorphism);
+    return 1;
+}
+
+void DepthFirstSearch::printIsomorphisms(){
+    std::cout << "Isomorphisms:\n";
+    for (std::vector<int> isomorphism : isomorphism_found) {
+        for (int v : isomorphism) {
+            std::cout << v << " ";
+        }
+        std::cout << std::endl;
+    }
+    return;
+}
+
+int DepthFirstSearch::findIsomporphisms(){
+    M0();
+    depth = 0;
+    int k = -1;
+    paired_verteces.assign(h_n, 0);
+    column_chosen.assign(g_n, -1); 
+    while (1) {
+        k = next_k(k);
+        if (k == -1){
+            if (depth == 0) {
+                return 0;
+            }
+            depth --;
+            paired_verteces[column_chosen[depth]] = 0;
+            k = column_chosen[depth];
+            column_chosen[depth] = -1;
+        }
+        else{
+            column_chosen[depth] = k;
+            paired_verteces[k] = 1;
+            if (depth == g_n - 1) {
+                checkIsomorphism();
+            }
+            depth ++;
+            k = -1;
+        }
+    }
+}

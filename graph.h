@@ -38,7 +38,7 @@ public:
     int get_e_num() const {return e_num;}
 
     bool edge(int v1, int v2) {
-        return adj_matrix[v1-1][v2-2];
+        return adj_matrix[v1-1][v2-1];
     }
 
     const std::vector<int>& neighbours(int v) {
