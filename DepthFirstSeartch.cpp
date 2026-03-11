@@ -1,4 +1,4 @@
-#include "SIalgorithms.h"
+#include "DepthFirstSearch.h"
 #include <iostream>
 
 void print_vector(std::vector<int>& v){

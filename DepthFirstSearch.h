@@ -8,7 +8,7 @@ public:
     virtual int findIsomporphisms(); // simple depth first search algorithm
     void printIsomorphisms();
 
-//protected:
+protected:
     Graph& G;
     Graph& H;
     int g_n;

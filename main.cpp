@@ -15,8 +15,8 @@ void print_matrix(std::vector<std::vector<int>>& v) {
 
 int main(){
     //Graph G("graf_probni", 0);
-    Graph G(5, 0.4, 0);
-    Graph H(10, 0.1, 0);
+    Graph G(15, 0.3, 0);
+    Graph H(30, 0.1, 0);
     G.printAdjList();
     H.printAdjList();
     DepthFirstSearch s(G, H);
