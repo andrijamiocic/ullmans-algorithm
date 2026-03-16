@@ -5,7 +5,7 @@ class DepthFirstSearch{
     
 public: 
     DepthFirstSearch( Graph& G, Graph& H ) : G(G), H(H), g_n(G.get_v_num()), h_n(H.get_v_num()){}
-    virtual int findIsomporphisms(); // simple depth first search algorithm
+    virtual int findIsomorphisms(); // simple depth first search algorithm
     void printIsomorphisms();
 
 protected:
@@ -23,7 +23,7 @@ protected:
     std::vector<int> paired_verteces; // paired_verteces[v] = 1 iff vertex v of the LARGER graph is paired 
     std::vector<int> column_chosen; // column_chosen[d] = k iff we chose column k at depth d
 
-    int next_k(int k);
+    virtual int next_k(int k);
 
     int checkIsomorphism();
 };

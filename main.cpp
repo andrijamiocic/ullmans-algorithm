@@ -1,6 +1,7 @@
 #include <iostream>
 #include "graph.h"
-#include "SIalgorithms.h"
+#include "DepthFirstSearch.h"
+#include "UllmansAlgorithm.h"
 
 void print_matrix(std::vector<std::vector<int>>& v) {
     for ( std::vector<int> v1 : v ) {
@@ -14,13 +15,15 @@ void print_matrix(std::vector<std::vector<int>>& v) {
 }
 
 int main(){
-    //Graph G("graf_probni", 0);
-    Graph G(15, 0.3, 0);
+    Graph G(10, 0.45, 0);
     Graph H(30, 0.1, 0);
     G.printAdjList();
     H.printAdjList();
     DepthFirstSearch s(G, H);
-    s.findIsomporphisms();
+    s.findIsomorphisms();
     s.printIsomorphisms();
+    UllmansAlgorithm u(G, H);
+    u.findIsomorphisms();
+    u.printIsomorphisms();
     return 0;
 }

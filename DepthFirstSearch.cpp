@@ -63,7 +63,7 @@ void DepthFirstSearch::printIsomorphisms(){
     return;
 }
 
-int DepthFirstSearch::findIsomporphisms(){
+int DepthFirstSearch::findIsomorphisms(){
     M0();
     depth = 0;
     int k = -1;
