@@ -1,5 +1,6 @@
 #pragma once
 #include "DepthFirstSearch.h"
+#include <iostream>
 #include <vector>
 
 class UllmansAlgorithm : public DepthFirstSearch{

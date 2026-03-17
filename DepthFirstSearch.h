@@ -7,6 +7,8 @@ public:
     DepthFirstSearch( Graph& G, Graph& H ) : G(G), H(H), g_n(G.get_v_num()), h_n(H.get_v_num()){}
     virtual int findIsomorphisms(); // simple depth first search algorithm
     void printIsomorphisms();
+    void measure_time();
+    double time = 0;
 
 protected:
     Graph& G;

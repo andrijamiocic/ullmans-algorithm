@@ -1,5 +1,6 @@
 #include "DepthFirstSearch.h"
 #include <iostream>
+#include <chrono>
 
 void print_vector(std::vector<int>& v){
     for (int i : v){
@@ -90,4 +91,12 @@ int DepthFirstSearch::findIsomorphisms(){
             k = -1;
         }
     }
+}
+
+void DepthFirstSearch::measure_time(){
+    auto start = std::chrono::high_resolution_clock::now();
+    findIsomorphisms();
+    auto end = std::chrono::high_resolution_clock::now();
+    auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
+    time = duration.count();
 }

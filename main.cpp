@@ -15,15 +15,21 @@ void print_matrix(std::vector<std::vector<int>>& v) {
 }
 
 int main(){
-    Graph G(10, 0.45, 0);
-    Graph H(30, 0.1, 0);
-    G.printAdjList();
-    H.printAdjList();
-    DepthFirstSearch s(G, H);
-    s.findIsomorphisms();
-    s.printIsomorphisms();
-    UllmansAlgorithm u(G, H);
-    u.findIsomorphisms();
-    u.printIsomorphisms();
+    int k = 0;
+    for (int i = 0; i < 100; i++) {
+        Graph G(10, 0.5, 0);
+        Graph H(20, 0.15, 0);
+        //G.printAdjList();
+        //H.printAdjList();
+        DepthFirstSearch s(G, H);
+        s.measure_time();
+        //s.printIsomorphisms();
+        UllmansAlgorithm u(G, H);
+        u.measure_time();
+        //u.printIsomorphisms();
+        double ratio = u.time/s.time;
+        std::cout << ratio << std::endl;
+    }
+    std::cout << "krivih: " << k << std::endl;
     return 0;
 }
