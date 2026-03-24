@@ -11,8 +11,6 @@ void print_vector(std::vector<int>& v){
 }
 
 void DepthFirstSearch::M0() {
-    int g_n = G.get_v_num();
-    int h_n = H.get_v_num();
     // G must have a lesser number of vertices to have an isomorphism subgraph
     if ( g_n > h_n ) { return; }
     for ( int i = 0; i < g_n; i++ ) {
@@ -64,24 +62,31 @@ void DepthFirstSearch::printIsomorphisms(){
     return;
 }
 
-int DepthFirstSearch::findIsomorphisms(){
+void DepthFirstSearch::initialize(){
     M0();
     depth = 0;
-    int k = -1;
+    k = -1;
     paired_verteces.assign(h_n, 0);
     column_chosen.assign(g_n, -1); 
+    return;
+}
+
+int DepthFirstSearch::findIsomorphisms(){
+    initialize();
     while (1) {
         k = next_k(k);
         if (k == -1){
             if (depth == 0) {
                 return 0;
             }
+            // could be decrease depth
             depth --;
             paired_verteces[column_chosen[depth]] = 0;
             k = column_chosen[depth];
             column_chosen[depth] = -1;
         }
         else{
+            // could be increase depth
             column_chosen[depth] = k;
             paired_verteces[k] = 1;
             if (depth == g_n - 1) {

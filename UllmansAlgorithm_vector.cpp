@@ -1,6 +1,6 @@
-#include "UllmansAlgorithm.h"
+#include "UllmansAlgorithm_vector.h"
 
-void print_matrix2(std::vector<std::vector<int>>& v) {
+void print_matrix1(std::vector<std::vector<int>>& v) {
     for ( std::vector<int> v1 : v ) {
         for (int i : v1) {
             std::cout << i << " ";
@@ -11,33 +11,38 @@ void print_matrix2(std::vector<std::vector<int>>& v) {
     return;
 }
 
-int UllmansAlgorithm::next_k(int k) {
+int UllmansAlgorithm_vector::next_k(int k) {
     if ( depth == g_n ) {return -1;}
     while ( k < h_n - 1 ) {
         k++;
-        if ( !paired_verteces[k] && M[depth][depth].getElement(k)) {
+        if ( !paired_verteces[k] && M[depth][depth][k]) {
             return k;
         }
     }
     return -1;
 }
 
-int UllmansAlgorithm::refinementConditionSatisfied(int i, int j) {
+int UllmansAlgorithm_vector::refinementConditionSatisfied(int i, int j) {
     //for each neighbour n of i+1 there must be a 1 in the n-1th row so that its column+1 and j+1 are neighbours 
     // AND that column is not used
     //this can be bit-vector operation - must be tested
-    std::vector<BitVector>& M_d = M[depth];
+    std::vector<std::vector<int>>& M_d = M[depth];
     for (int n : G.neighbours(i+1)) {
-        if (!M_d[n-1].intersect(H_adj_matrix[j])){
-            return 0;
+        int found = 0;
+        for (int m = 0; m < h_n; m++) {
+            if (M_d[n-1][m] && H.edge(j+1, m+1)){
+                found = 1;
+                break;
+            }
         }
+        if (!found) {return 0;}
     }
     return 1;
 }
 
-int UllmansAlgorithm::refine(){
+int UllmansAlgorithm_vector::refine(){
     // this can be implemented in parallel
-    std::vector<BitVector>& M_d = M[depth];
+    std::vector<std::vector<int>>& M_d = M[depth];
     int changed = 1;
     while ( changed ) {
         changed = 0;
@@ -54,11 +59,11 @@ int UllmansAlgorithm::refine(){
         }
         for (int i = depth; i < g_n; i++) {
             for (int j = 0; j < h_n; j++ ) {
-                if ( !M_d[i].getElement(j) ) { continue; }
+                if ( !M_d[i][j] ) { continue; }
                 // check the condition
                 // if not satisfied -> M_d[i][j] = 0 and changed = 1
                 if ( !refinementConditionSatisfied(i, j)) {
-                    M_d[i].setZero(j);
+                    M_d[i][j] = 0;
                     changed = 1;
                 }
             }
@@ -67,56 +72,20 @@ int UllmansAlgorithm::refine(){
     return 1;
 }
 
-void UllmansAlgorithm::generateMd() {
+void UllmansAlgorithm_vector::generateMd() {
     M[depth] = M[depth-1];
     for (int i = 0; i < h_n; i++) {
         if ( i != column_chosen[depth-1] ) {
-            M[depth][depth-1].setZero(i);
+            M[depth][depth-1][i] = 0;
         }
     } 
     return;
 }
 
-void UllmansAlgorithm::M0() {
-    // G must have a lesser number of vertices to have an isomorphism subgraph
-    M_root.assign(g_n, BitVector(h_n));
-    if ( g_n > h_n ) { return; }
-    for ( int i = 0; i < g_n; i++ ) {
-        for ( int j = 0; j < h_n; j++ ) {
-            if ( G.degree(i+1) <= H.degree(j+1) ) {
-                M_root[i].setOne(j);
-            }else {
-                M_root[i].setZero(j);
-            }
-        }
-    }
-    return;
-}
-
-void UllmansAlgorithm::initialize() {
-    // initialize adjecency bitmatrices of G and H
-    G_adj_matrix.assign(g_n, BitVector(g_n));
-    for (int i = 0; i < g_n; i++) {
-        for (int j = 0; j < g_n; j++) {
-            if (G.edge(i+1, j+1)) {
-                G_adj_matrix[i].setOne(j);
-                G_adj_matrix[j].setOne(i);
-            }
-        }
-    }
-    H_adj_matrix.assign(h_n, BitVector(h_n));
-    for (int i = 0; i < h_n; i++) {
-        for (int j = 0; j < h_n; j++) {
-            if (H.edge(i+1, j+1)) {
-                H_adj_matrix[i].setOne(j);
-                H_adj_matrix[j].setOne(i);
-            }
-        }
-    }
-    // initialize M_root
-    M.assign(g_n+1, {});
+void UllmansAlgorithm_vector::initialize(){
     M0();
-    M[0] = M_root;
+    M.assign(g_n+1, {});
+    M[0] = M_0;
     depth = 0;
     k = -1;
     paired_verteces.assign(h_n, 0);
@@ -124,7 +93,7 @@ void UllmansAlgorithm::initialize() {
     return;
 }
 
-int UllmansAlgorithm::findIsomorphisms() {
+int UllmansAlgorithm_vector::findIsomorphisms(){
     initialize();
     while (1) {
         int refinemet_satisfied = refine();
