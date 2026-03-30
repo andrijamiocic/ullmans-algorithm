@@ -57,6 +57,24 @@ Graph::Graph(int v_number, double p, int dir){
     }
 }
 
+bool Graph::toFile(const std::string& filename) {
+    std::ofstream out_file(filename+".txt");
+    
+    if (!out_file.is_open()) {return false;}
+    
+    out_file << get_v_num() << "\n";
+
+    for (int i = 0; i < get_v_num(); i++) {
+        for (int j = i+1; j < get_v_num(); j++ ){
+            if (edge(i+1, j+1)){
+                out_file << i+1 << " " << j+1 << "\n";
+            }
+        }
+    }
+    out_file.close();
+    return true;
+}
+
 void Graph::printAdjMatrix() {
     for (int i = 0; i < v_num; i++) {
         for (int j = 0; j < v_num; j++) {

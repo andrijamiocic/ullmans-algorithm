@@ -13,7 +13,10 @@ public:
     void setOne(int index);
     void setZero(int index);
     bool intersect(BitVector& b);
+    void mask(int index);
+    int nextOnePosition(int pos);
 
 //private:
     std::vector<uint64_t> b_vector_data; // we use largest possible size of integer
+    int size;
 };

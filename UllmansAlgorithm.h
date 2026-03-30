@@ -15,6 +15,8 @@ protected:
     std::vector<std::vector<BitVector>> M; // an array of search matrices, each to be refined before continuation
     int refinementConditionSatisfied(int i, int j);
     int refine(); 
+    int refineParallel();
+    void refineRow(int i, int& changed); 
     void generateMd(); // generates a new matrix at current depth
     std::vector<BitVector> M_root;
     std::vector<BitVector> G_adj_matrix;

@@ -1,4 +1,5 @@
 #include "UllmansAlgorithm.h"
+#include <thread>
 
 void print_matrix2(std::vector<std::vector<int>>& v) {
     for ( std::vector<int> v1 : v ) {
@@ -15,17 +16,23 @@ int UllmansAlgorithm::next_k(int k) {
     if ( depth == g_n ) {return -1;}
     while ( k < h_n - 1 ) {
         k++;
-        if ( !paired_verteces[k] && M[depth][depth].getElement(k)) {
+        if (!paired_verteces[k] && M[depth][depth].getElement(k)) {
             return k;
         }
     }
+    // the bit method implemented below has proven to be slower for a fraction of time for some reason
+    /*
+    k = M[depth][depth].nextOnePosition(k);
+    while (k != -1) {
+        if (!paired_verteces[k]){return k;}
+        k = M[depth][depth].nextOnePosition(k);
+    }*/
     return -1;
 }
 
 int UllmansAlgorithm::refinementConditionSatisfied(int i, int j) {
     //for each neighbour n of i+1 there must be a 1 in the n-1th row so that its column+1 and j+1 are neighbours 
     // AND that column is not used
-    //this can be bit-vector operation - must be tested
     std::vector<BitVector>& M_d = M[depth];
     for (int n : G.neighbours(i+1)) {
         if (!M_d[n-1].intersect(H_adj_matrix[j])){
@@ -44,11 +51,11 @@ int UllmansAlgorithm::refine(){
         // this can be sped up using column_chosen
         // from 0 to d-1 we can use column_chosen to get the only 1 in the row
         // from d to g_n-1 we have to get them manually
-        for ( int i = 0; i < depth; i++) {
+        for (int i = 0; i < depth; i++) {
             int j = column_chosen[i];
             // check the condition
-            //if not satisfied -> terminate
-            if ( !refinementConditionSatisfied(i, j)) {
+            // if not satisfied -> terminate
+            if (!refinementConditionSatisfied(i, j)) {
                 return 0;
             }
         }
@@ -67,13 +74,51 @@ int UllmansAlgorithm::refine(){
     return 1;
 }
 
-void UllmansAlgorithm::generateMd() {
-    M[depth] = M[depth-1];
-    for (int i = 0; i < h_n; i++) {
-        if ( i != column_chosen[depth-1] ) {
-            M[depth][depth-1].setZero(i);
+void UllmansAlgorithm::refineRow(int i, int& changed) {
+    for (int j = 0; j < h_n; j++ ) {
+        if ( ! M[depth][i].getElement(j) ) { continue; }
+        // check the condition
+        // if not satisfied -> M_d[i][j] = 0 and changed = 1
+        if ( !refinementConditionSatisfied(i, j)) {
+            M[depth][i].setZero(j);
+            changed = 1;
         }
-    } 
+    }
+}
+
+int UllmansAlgorithm::refineParallel(){
+    std::vector<BitVector>& M_d = M[depth];
+    int changed = 1;
+    while ( changed ) {
+        changed = 0;
+        // this can be sped up using column_chosen
+        // from 0 to d-1 we can use column_chosen to get the only 1 in the row
+        // from d to g_n-1 we have to get them manually
+        for (int i = 0; i < depth; i++) {
+            int j = column_chosen[i];
+            // check the condition
+            // if not satisfied -> terminate
+            if (!refinementConditionSatisfied(i, j)) {
+                return 0;
+            }
+        }
+        std::vector<std::thread> t;
+        t.reserve(g_n);
+        for (int i = depth; i < g_n; i++) {
+            t.push_back(std::thread(&UllmansAlgorithm::refineRow, this,  i, std::ref(changed)));
+        }
+        for (int i = depth; i < g_n; i++) {
+            t[i-depth].join();
+        }
+    }
+    return 1;
+}
+
+void UllmansAlgorithm::generateMd() {
+    // this should maybe be implemented as a vector of stacks - each row in its own stack
+    // would save memory and time that is wasted on copying rows
+    M[depth] = M[depth-1];
+    M[depth][depth-1].mask(column_chosen[depth-1]);
     return;
 }
 

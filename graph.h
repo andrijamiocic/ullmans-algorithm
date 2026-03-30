@@ -26,6 +26,7 @@ public:
     Graph() = default;
     Graph(std::string filename, int dir); // 0 for undirected, 1 for directed
     Graph(int v_number, double p, int dir); // a random graph with v_number verteces and a probability p of an edge between two vertecees
+    bool toFile(const std::string& filename);
 
     void printAdjMatrix();
     void printAdjList();
