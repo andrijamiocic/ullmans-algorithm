@@ -33,6 +33,10 @@ int UllmansAlgorithm::next_k(int k) {
 int UllmansAlgorithm::refinementConditionSatisfied(int i, int j) {
     //for each neighbour n of i+1 there must be a 1 in the n-1th row so that its column+1 and j+1 are neighbours 
     // AND that column is not used
+
+    // we could OR all of the bitvectors and then count the ones -> there should be at least degree(i) of them
+    // this would maybe slow down the algorithm and actually is not the part of the original algorithm
+
     std::vector<BitVector>& M_d = M[depth];
     for (int n : G.neighbours(i+1)) {
         if (!M_d[n-1].intersect(H_adj_matrix[j])){
@@ -42,14 +46,14 @@ int UllmansAlgorithm::refinementConditionSatisfied(int i, int j) {
     return 1;
 }
 
-int UllmansAlgorithm::refine(){
+int UllmansAlgorithm::refine() {
     // this can be implemented in parallel
     std::vector<BitVector>& M_d = M[depth];
     int changed = 1;
     while ( changed ) {
         changed = 0;
-        // this can be sped up using column_chosen
-        // from 0 to d-1 we can use column_chosen to get the only 1 in the row
+        // this is sped up using column_chosen
+        // from 0 to d-1 we use column_chosen to get the only 1 in the row
         // from d to g_n-1 we have to get them manually
         for (int i = 0; i < depth; i++) {
             int j = column_chosen[i];
@@ -69,6 +73,8 @@ int UllmansAlgorithm::refine(){
                     changed = 1;
                 }
             }
+            //check if the row is zero (that means no more candidates for the node i)
+            if (M_d[i].isZero()) {return 0;}
         }
     }
     return 1;
@@ -86,7 +92,7 @@ void UllmansAlgorithm::refineRow(int i, int& changed) {
     }
 }
 
-int UllmansAlgorithm::refineParallel(){
+int UllmansAlgorithm::refineParallel() {
     std::vector<BitVector>& M_d = M[depth];
     int changed = 1;
     while ( changed ) {
@@ -119,6 +125,10 @@ void UllmansAlgorithm::generateMd() {
     // would save memory and time that is wasted on copying rows
     M[depth] = M[depth-1];
     M[depth][depth-1].mask(column_chosen[depth-1]);
+    // this is not part of the 1976 algorithm, but it speeds it up by ~30%
+    /*for (int i = depth; i < g_n; i++) {
+        M[depth][i].setZero(column_chosen[depth-1]);
+    }*/
     return;
 }
 

@@ -14,7 +14,7 @@ void DepthFirstSearch::M0() {
     // G must have a lesser number of vertices to have an isomorphism subgraph
     if ( g_n > h_n ) { return; }
     for ( int i = 0; i < g_n; i++ ) {
-        M_0.push_back({}); // testirati dobro - koju je bolje prije napuniti
+        M_0.push_back({});
         for ( int j = 0; j < h_n; j++ ) {
             if ( G.degree(i+1) <= H.degree(j+1) ) {
                 M_0[i].push_back(1);
@@ -79,14 +79,12 @@ int DepthFirstSearch::findIsomorphisms(){
             if (depth == 0) {
                 return 0;
             }
-            // could be decrease depth
             depth --;
             paired_verteces[column_chosen[depth]] = 0;
             k = column_chosen[depth];
             column_chosen[depth] = -1;
         }
         else{
-            // could be increase depth
             column_chosen[depth] = k;
             paired_verteces[k] = 1;
             if (depth == g_n - 1) {

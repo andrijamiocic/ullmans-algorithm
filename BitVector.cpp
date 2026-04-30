@@ -42,12 +42,19 @@ void BitVector::mask(int index) {
     return;
 }
 
+bool BitVector::isZero() {
+    int s = b_vector_data.size();
+    for (int i = 0; i < s; i++) {
+        if (b_vector_data[i]){return 0;}
+    }
+    return 1;
+}
+
 int BitVector::nextOnePosition(int pos) {
     if (pos > size - 1) {return -1;}
     int block_index = pos / 64;
     int block_position = pos % 64;
     while (block_index < b_vector_data.size()) {
-        //uint64_t mask = b_vector_data[block_index] & ((~0ULL) << (block_position+1));
         if ((b_vector_data[block_index] & ((~0ULL) << (block_position+1))) != 0) {
             return __builtin_ctzll(b_vector_data[block_index] & ((~0ULL) << (block_position+1))) + 64*block_index;
         }

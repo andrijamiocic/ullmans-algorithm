@@ -10,7 +10,8 @@ a class to implement tests
 - performing test and storing the results with variables:
     - graph files names
     - runtimes file name
-    - 
+    - special case of graph isomorphism
+    
 */
 
 class Test{
