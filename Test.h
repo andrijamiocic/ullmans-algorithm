@@ -1,4 +1,5 @@
 #pragma once
+#include "UllmansAlgorithm.h"
 
 /*
 a class to implement tests
@@ -15,6 +16,10 @@ a class to implement tests
 */
 
 class Test{
+public:
+    
+    int verification(int n);
 
+private:
 
 };

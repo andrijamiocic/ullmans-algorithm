@@ -29,6 +29,6 @@ protected:
 
     virtual int next_k(int k);
 
-    int checkIsomorphism();
+    virtual int checkIsomorphism();
 };
 

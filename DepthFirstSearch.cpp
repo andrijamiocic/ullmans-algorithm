@@ -43,11 +43,7 @@ int DepthFirstSearch::checkIsomorphism(){
             if ( G.edge(i+1, j+1) && !H.edge(column_chosen[i]+1, column_chosen[j]+1) ){return 0;}
         }
     }
-    std::vector<int> isomorphism;
-    for (int v : column_chosen){
-        isomorphism.push_back(v+1);
-    }
-    isomorphism_found.push_back(isomorphism);
+    isomorphism_found.push_back(column_chosen);
     return 1;
 }
 

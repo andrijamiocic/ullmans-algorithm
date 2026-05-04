@@ -10,6 +10,7 @@
 #include "DepthFirstSearch.h"
 #include "UllmansAlgorithm.h"
 #include "UllmansAlgorithm_vector.h"
+#include "Test.h"
 
 void print_matrix(std::vector<std::vector<int>>& v) {
     for ( std::vector<int> v1 : v ) {
@@ -82,9 +83,7 @@ void compare(const std::string& filename1, const std::string& filename2){
 }
 
 int main(){
-    store_graphs(60);
-    store_test_results("results1.txt");
-    //store_test_results("results2.txt");
-    //compare("results1.txt", "results2.txt");
+    Test t;
+    t.verification(200);
     return 0;
 }

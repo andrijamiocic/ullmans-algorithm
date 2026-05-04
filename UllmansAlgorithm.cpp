@@ -188,7 +188,7 @@ int UllmansAlgorithm::findIsomorphisms() {
             if (depth == 0) {
                 return 0;
             }
-            depth --;
+            depth--;
             paired_verteces[column_chosen[depth]] = 0;
             k = column_chosen[depth];
             column_chosen[depth] = -1;
@@ -197,9 +197,9 @@ int UllmansAlgorithm::findIsomorphisms() {
             column_chosen[depth] = k;
             paired_verteces[k] = 1;
             if (depth == g_n - 1) {
-                checkIsomorphism();
+                isomorphism_found.push_back(column_chosen); //because the refinement procedure verified the solution, we dont need to
             }
-            depth ++;
+            depth++;
             //generate matrix M[d] (first d rows need to be chosen)
             generateMd();
             k = -1;
