@@ -27,12 +27,19 @@ void BitVector::setZero(int index) {
     return;
 }
 
-bool BitVector::intersect(BitVector& b) {
+bool BitVector::intersectionNotEmpty(BitVector& b) {
     bool result = false;
     for (int i = 0; i < b_vector_data.size(); i++) {
         result |= ((b_vector_data[i] & b.b_vector_data[i]) != 0);
     }
     return result;
+}
+
+void BitVector::intersect(BitVector& b) {
+    for (int i = 0; i < b_vector_data.size(); i++) {
+        b_vector_data[i] &= b.b_vector_data[i];
+    }
+    return;
 }
 
 void BitVector::mask(int index) {

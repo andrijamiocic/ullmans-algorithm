@@ -12,7 +12,7 @@ void print_matrix2(std::vector<std::vector<int>>& v) {
     return;
 }
 
-int UllmansAlgorithm::next_k(int k) {
+int UllmansAlgorithm::choose_k(int k) {
     if ( depth == g_n ) {return -1;}
     while ( k < h_n - 1 ) {
         k++;
@@ -39,7 +39,7 @@ int UllmansAlgorithm::refinementConditionSatisfied(int i, int j) {
 
     std::vector<BitVector>& M_d = M[depth];
     for (int n : G.neighbours(i+1)) {
-        if (!M_d[n-1].intersect(H_adj_matrix[j])){
+        if (!M_d[n-1].intersectionNotEmpty(H_adj_matrix[j])){
             return 0;
         }
     }
@@ -183,7 +183,7 @@ int UllmansAlgorithm::findIsomorphisms() {
     initialize();
     while (1) {
         int refinemet_satisfied = refine();
-        k = next_k(k);
+        k = choose_k(k);
         if (k == -1 || !refinemet_satisfied){
             if (depth == 0) {
                 return 0;

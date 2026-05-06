@@ -11,7 +11,7 @@ void print_matrix1(std::vector<std::vector<int>>& v) {
     return;
 }
 
-int UllmansAlgorithm_vector::next_k(int k) {
+int UllmansAlgorithm_vector::choose_k(int k) {
     if ( depth == g_n ) {return -1;}
     while ( k < h_n - 1 ) {
         k++;
@@ -97,7 +97,7 @@ int UllmansAlgorithm_vector::findIsomorphisms(){
     initialize();
     while (1) {
         int refinemet_satisfied = refine();
-        k = next_k(k);
+        k = choose_k(k);
         if (k == -1 || !refinemet_satisfied){
             if (depth == 0) {
                 return 0;

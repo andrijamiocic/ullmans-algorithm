@@ -26,7 +26,7 @@ void DepthFirstSearch::M0() {
     return;
 }
 
-int DepthFirstSearch::next_k(int k) {
+int DepthFirstSearch::choose_k(int k) {
     if ( depth == g_n ) {return -1;}
     while ( k < h_n - 1 ) {
         k++;
@@ -70,7 +70,7 @@ void DepthFirstSearch::initialize(){
 int DepthFirstSearch::findIsomorphisms(){
     initialize();
     while (1) {
-        k = next_k(k);
+        k = choose_k(k);
         if (k == -1){
             if (depth == 0) {
                 return 0;

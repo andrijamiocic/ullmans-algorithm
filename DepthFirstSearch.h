@@ -27,7 +27,7 @@ protected:
     std::vector<int> paired_verteces; // paired_verteces[v] = 1 iff vertex v of the LARGER graph is paired 
     std::vector<int> column_chosen; // column_chosen[d] = k iff we chose column k at depth d
 
-    virtual int next_k(int k);
+    virtual int choose_k(int k);
 
     virtual int checkIsomorphism();
 };

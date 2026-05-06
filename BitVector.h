@@ -12,7 +12,8 @@ public:
     bool getElement(int index);
     void setOne(int index);
     void setZero(int index);
-    bool intersect(BitVector& b);
+    bool intersectionNotEmpty(BitVector& b);
+    void BitVector::intersect(BitVector& b);
     void mask(int index);
     bool isZero();
     int nextOnePosition(int pos);
