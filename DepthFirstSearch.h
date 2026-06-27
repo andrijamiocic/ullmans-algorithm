@@ -1,6 +1,11 @@
 #pragma once
 #include "graph.h"
 
+/*
+Because not all class variables and functions would be reused, we implement focus search as its own class
+instead of derived class of Ullman's algorithm
+*/
+
 class DepthFirstSearch{
     
 public: 

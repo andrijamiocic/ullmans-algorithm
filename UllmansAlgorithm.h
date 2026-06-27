@@ -19,6 +19,5 @@ protected:
     void refineRow(int i, int& changed); 
     void generateMd(); // generates a new matrix at current depth
     std::vector<BitVector> M_root;
-    std::vector<BitVector> G_adj_matrix;
     std::vector<BitVector> H_adj_matrix;
 };

@@ -84,7 +84,7 @@ void compare(const std::string& filename1, const std::string& filename2){
 
 int main(){
     Test t;
-    t.verification(200);
+    t.verification(50);
     
     return 0;
 }

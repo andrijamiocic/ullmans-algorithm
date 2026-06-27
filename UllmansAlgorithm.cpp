@@ -140,8 +140,6 @@ void UllmansAlgorithm::M0() {
         for ( int j = 0; j < h_n; j++ ) {
             if ( G.degree(i+1) <= H.degree(j+1) ) {
                 M_root[i].setOne(j);
-            }else {
-                M_root[i].setZero(j);
             }
         }
     }
@@ -149,16 +147,7 @@ void UllmansAlgorithm::M0() {
 }
 
 void UllmansAlgorithm::initialize() {
-    // initialize adjecency bitmatrices of G and H
-    G_adj_matrix.assign(g_n, BitVector(g_n));
-    for (int i = 0; i < g_n; i++) {
-        for (int j = 0; j < g_n; j++) {
-            if (G.edge(i+1, j+1)) {
-                G_adj_matrix[i].setOne(j);
-                G_adj_matrix[j].setOne(i);
-            }
-        }
-    }
+    // initialize adjecency bitmatrices of H
     H_adj_matrix.assign(h_n, BitVector(h_n));
     for (int i = 0; i < h_n; i++) {
         for (int j = 0; j < h_n; j++) {

@@ -8,17 +8,17 @@
 class BitVector{
 
 public:
-    BitVector(int n); 
+    BitVector(int n); // constuctor - n is the number of stored bits, all assigned 0
     bool getElement(int index);
     void setOne(int index);
     void setZero(int index);
-    bool intersectionNotEmpty(BitVector& b);
-    void BitVector::intersect(BitVector& b);
+    bool intersectionNotEmpty(BitVector& b); 
+    void intersect(BitVector& b);
     void mask(int index);
     bool isZero();
     int nextOnePosition(int pos);
 
-//private:
+private:
     std::vector<uint64_t> b_vector_data; // we use largest possible size of integer
     int size;
 };

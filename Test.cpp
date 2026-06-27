@@ -6,7 +6,7 @@ int Test::verification(int n) {
     double prosjek2 = 0;
     for (int i = 0; i < n; i++){
         Graph G(7, 0.4, 0);
-        Graph H(10, 0.8, 0);
+        Graph H(20, 0.2, 0);
         DepthFirstSearch d(G, H);
         UllmansAlgorithm u(G, H);
         d.measure_time();
@@ -16,8 +16,8 @@ int Test::verification(int n) {
         if (d.isomorphism_found != u.isomorphism_found) {
             krivih++;
         }
-        prosjek1 += u.time;
-        prosjek2 += d.time;
+        prosjek1 += d.time;
+        prosjek2 += u.time;
     }
     prosjek1 /= n;
     prosjek2 /= n;
