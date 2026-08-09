@@ -1,5 +1,6 @@
 #pragma once
 #include "UllmansAlgorithm.h"
+#include "FocusSearch.h"
 
 /*
 a class to implement tests
@@ -21,5 +22,7 @@ public:
     int verification(int n);
 
 private:
+
+    int compare(std::vector<std::vector<int>>& v1, std::vector<std::vector<int>>& v2);
 
 };

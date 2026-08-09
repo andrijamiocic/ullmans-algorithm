@@ -10,6 +10,7 @@
 #include "DepthFirstSearch.h"
 #include "UllmansAlgorithm.h"
 #include "UllmansAlgorithm_vector.h"
+#include "FocusSearch.h"
 #include "Test.h"
 
 void print_matrix(std::vector<std::vector<int>>& v) {
@@ -84,7 +85,7 @@ void compare(const std::string& filename1, const std::string& filename2){
 
 int main(){
     Test t;
-    t.verification(50);
+    t.verification(100);
     
     return 0;
 }

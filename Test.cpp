@@ -7,17 +7,18 @@ int Test::verification(int n) {
     for (int i = 0; i < n; i++){
         Graph G(7, 0.4, 0);
         Graph H(20, 0.2, 0);
-        DepthFirstSearch d(G, H);
         UllmansAlgorithm u(G, H);
-        d.measure_time();
-        std::cout << i << std::endl;
+        FocusSearch f(G, H);
         u.measure_time();
         std::cout << i << std::endl;
-        if (d.isomorphism_found != u.isomorphism_found) {
+        f.measure_time();
+        std::cout << i << std::endl;
+        if (!compare(u.isomorphism_found, f.isomorphism_found)) {
             krivih++;
+            f.printIsomorphisms();
         }
-        prosjek1 += d.time;
-        prosjek2 += u.time;
+        prosjek1 += u.time;
+        prosjek2 += f.time;
     }
     prosjek1 /= n;
     prosjek2 /= n;
@@ -25,4 +26,20 @@ int Test::verification(int n) {
     std::cout << "Stari: " << prosjek1 << std::endl;
     std::cout << "Novi: " << prosjek2 << std::endl;
     return krivih;
+}
+
+int Test::compare(std::vector<std::vector<int>>& v1, std::vector<std::vector<int>>& v2){
+        if (v1.size() != v2.size()){return 0;}
+        int n = v2.size();
+        for (int i = 0; i < n; i++){
+            int ok = 0;
+            for (int j = 0; j < n; j++){
+                if (v1[i] == v2[j]){
+                    ok = 1;
+                    break;
+                }
+            }
+            if (!ok) {return 0;}
+        }
+        return 1;
 }

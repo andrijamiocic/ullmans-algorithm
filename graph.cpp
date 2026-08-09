@@ -7,7 +7,6 @@
 #include <random>
 
 Graph::Graph(std::string filename, int dir) {
-    directed = dir;
     std::ifstream FILE(filename + ".txt");
     std::string line;
     int v1, v2;
@@ -27,7 +26,7 @@ Graph::Graph(std::string filename, int dir) {
     while (getline(FILE, line)) {
         std::stringstream ss(line);
         ss >> v1 >> v2;
-        insertEdge(v1, v2, directed);
+        insertEdge(v1, v2, dir);
     }
 }
 

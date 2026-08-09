@@ -1,11 +1,12 @@
 #pragma once
 #include <vector>
+#include <set>
 #include "graph.h"
 #include "BitVector.h"
 
 class FocusSearch {
 public:
-FocusSearch( Graph& G, Graph& H ) : G(G), H(H), g_n(G.get_v_num()), h_n(H.get_v_num()){}
+    FocusSearch( Graph& G, Graph& H ) : G(G), H(H), g_n(G.get_v_num()), h_n(H.get_v_num()) {}
     int findIsomorphisms();
     void printIsomorphisms();
     void measure_time();
@@ -20,15 +21,49 @@ private:
     int h_n;
     std::vector<BitVector> H_adj_matrix; // only bit-representation of H is needed
     int depth; // current depth in search tree
-    int k; // pointer to the next instantiation of variable
+    int current_vertex; // = instOrder[depth]. Because of vetrex oredering this is not the same as depth.
     std::vector<BitVector> M0; // bit-matrix that stores inital domain of each pattern graph vertex as a bitset
-    std::vector<BitVector> M; // same as M0, but used to keep
+    std::vector<BitVector> M; // same as M, but used for searc tree and is changed constantly : TEMPORARY SIMPLIFIED SOLUTION!!
+    std::vector<std::vector<int>> M0_list; // M0 as a vector, used for iteration
+    std::vector<int> M0_index; // M0_index[i] = index of the current instantiation in M0_list[i]
+    int k; // index of the last instantiated variable within M0_list
     std::vector<int> instOrder; // a list of G vertices, ordered by instantiation priority
-    int choose_k();
+    std::vector<int> lastNeighbour; // lastNeigbour[u]=v <=> v is the last adjacent vertex to u before u
+    std::vector<std::vector<int>> nextNeighbours; //nextNeigbours[u] = {v; lastNeighbour[v]=u}
+    std::vector<std::vector<std::vector<int>>> seList;
+    std::vector<int> paired_verteces; // paired_verteces[v] = 1 iff some vetrex of G has been instantiated to vertex v of graph H
+    std::vector<int> Isomorphism_function; // the main isomporphism function
+    void get_k();
+    void initializeLastNeighbour();
+    void initializeNextNeighbours();
     void initializeM0();
     void initialize();
-    void instantiationOrder();
-    std::vector<int> getHeuristic();
     int refine();
 
+};
+
+// we implement a new class just for static ordering before the search
+
+class InstantiationOrder {
+public:
+
+    InstantiationOrder( Graph& G) : G(G), g_n(G.get_v_num()){}
+    void getOrder(std::vector<int>& order);
+
+private:
+
+    std::vector<int> heuristic;
+    std::vector<int> prev_neighbours;
+    void getHeuristic();
+
+    class Comparator { // the set of uninserted vertices needs to be heuristicaly ordered
+    public:
+        Comparator(const std::vector<int>& h, const std::vector<int>& p) : heuristic(h), prev_neighbours(p) {}
+        const std::vector<int>& heuristic;
+        const std::vector<int>& prev_neighbours;
+        bool operator()(int u, int v) const;
+    };
+
+    Graph& G;
+    int g_n;
 };
