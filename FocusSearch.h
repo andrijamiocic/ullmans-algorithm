@@ -40,30 +40,32 @@ private:
     void initialize();
     int refine();
 
-};
-
-// we implement a new class just for static ordering before the search
-
-class InstantiationOrder {
-public:
-
-    InstantiationOrder( Graph& G) : G(G), g_n(G.get_v_num()){}
-    void getOrder(std::vector<int>& order);
-
-private:
-
-    std::vector<int> heuristic;
-    std::vector<int> prev_neighbours;
-    void getHeuristic();
-
-    class Comparator { // the set of uninserted vertices needs to be heuristicaly ordered
+    
+    // we implement a new class just for static ordering before the search
+    class InstantiationOrder {
     public:
-        Comparator(const std::vector<int>& h, const std::vector<int>& p) : heuristic(h), prev_neighbours(p) {}
-        const std::vector<int>& heuristic;
-        const std::vector<int>& prev_neighbours;
-        bool operator()(int u, int v) const;
+
+        InstantiationOrder( Graph& G) : G(G), g_n(G.get_v_num()){}
+        void getOrder(std::vector<int>& order);
+
+    private:
+
+        std::vector<int> heuristic;
+        std::vector<int> prev_neighbours;
+        void getHeuristic();
+
+        class Comparator { // the set of uninserted vertices needs to be heuristicaly ordered
+        public:
+            Comparator(const std::vector<int>& h, const std::vector<int>& p) : heuristic(h), prev_neighbours(p) {}
+            const std::vector<int>& heuristic;
+            const std::vector<int>& prev_neighbours;
+            bool operator()(int u, int v) const;
+        };
+
+        Graph& G;
+        int g_n;
     };
 
-    Graph& G;
-    int g_n;
 };
+
+

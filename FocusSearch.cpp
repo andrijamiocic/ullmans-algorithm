@@ -117,6 +117,7 @@ void FocusSearch::get_k(){
 
 
 int FocusSearch::findIsomorphisms(){
+    // we need to implement termination when G > H
     initialize();
     int refinemet_satisfied = 1;
     while (1) {
@@ -147,7 +148,7 @@ int FocusSearch::findIsomorphisms(){
         }
     }
 }
-void InstantiationOrder::getHeuristic() {
+void FocusSearch::InstantiationOrder::getHeuristic() {
     std::vector<int> branch;
     for (int i = 0; i < g_n; i++ ){
         int sum = 0;
@@ -166,7 +167,7 @@ void InstantiationOrder::getHeuristic() {
     return;
 }
 
-bool InstantiationOrder::Comparator::operator()(int u, int v) const {
+bool FocusSearch::InstantiationOrder::Comparator::operator()(int u, int v) const {
     if (prev_neighbours[u] != prev_neighbours[v]) {
         return prev_neighbours[u] > prev_neighbours[v]; // we want the bigger one
     }
@@ -176,7 +177,7 @@ bool InstantiationOrder::Comparator::operator()(int u, int v) const {
     return u < v; // in case of a draw, just return the smaller index for determinism
 }
 
-void InstantiationOrder::getOrder(std::vector<int>& order) {
+void FocusSearch::InstantiationOrder::getOrder(std::vector<int>& order) {
     getHeuristic();
     prev_neighbours.assign(g_n, 0);
     Comparator C(heuristic, prev_neighbours);

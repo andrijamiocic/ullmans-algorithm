@@ -87,10 +87,11 @@ void Graph::printAdjMatrix() {
 
 void Graph::printAdjList() {
     for (int i = 0; i < v_num; i++) {
-        std::cout << i + 1 << ": ";
-        for (int j = 0; j < adj_list[i].size(); j++) {
+        std::cout << i << ": ";
+        /*for (int j = 0; j < adj_list[i].size(); j++) {
             std::cout << adj_list [i][j] << " ";
-        }
+        }*/
+        std::cout << degree(i+1);
         std::cout << std::endl;
     }
     std::cout << std::endl;

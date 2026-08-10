@@ -34,7 +34,7 @@ void store_graphs(int size) {
     return;
 }
 
-void store_test_results(const std::string& filename){
+void store_test_results_u(const std::string& filename){
     std::ofstream out_file(filename);
     for (int i = 0; i < 100; i++) {
         Graph G("graphs/G_"+std::to_string(i), 0);
@@ -44,6 +44,24 @@ void store_test_results(const std::string& filename){
         out_file << u.time << "\n";
         std::cout << u.time/1000000 << std::endl;
         if (u.time > 1000000) {
+            G.printAdjList();
+            H.printAdjList();
+        }
+    }
+    out_file.close();
+    return;
+}
+
+void store_test_results_f(const std::string& filename){
+    std::ofstream out_file(filename);
+    for (int i = 0; i < 100; i++) {
+        Graph G("graphs/G_"+std::to_string(i), 0);
+        Graph H("graphs/H_"+std::to_string(i), 0);
+        FocusSearch f(G, H);
+        f.measure_time();
+        out_file << f.time << "\n";
+        std::cout << f.time/1000000 << std::endl;
+        if (f.time > 1000000) {
             G.printAdjList();
             H.printAdjList();
         }
@@ -84,8 +102,11 @@ void compare(const std::string& filename1, const std::string& filename2){
 }
 
 int main(){
+    /*store_graphs(1500);
+    store_test_results_u("results_u.txt");
+    store_test_results_f("results_f.txt");
+    compare("results_u.txt", "results_f.txt");*/
     Test t;
-    t.verification(100);
-    
+    t.verification(50);
     return 0;
 }

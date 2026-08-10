@@ -5,8 +5,8 @@ int Test::verification(int n) {
     double prosjek1 = 0;
     double prosjek2 = 0;
     for (int i = 0; i < n; i++){
-        Graph G(7, 0.4, 0);
-        Graph H(20, 0.2, 0);
+        Graph G(10, 0.4, 0);
+        Graph H(20, 0.25, 0);
         UllmansAlgorithm u(G, H);
         FocusSearch f(G, H);
         u.measure_time();
