@@ -7,7 +7,7 @@ int Test::verification(int n) {
     for (int i = 0; i < n; i++){
         Graph G(10, 0.4, 0);
         Graph H(20, 0.25, 0);
-        UllmansAlgorithm u(G, H);
+        CMAlgorithm u(G, H);
         FocusSearch f(G, H);
         u.measure_time();
         std::cout << i << std::endl;

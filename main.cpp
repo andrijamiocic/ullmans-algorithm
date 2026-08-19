@@ -11,6 +11,7 @@
 #include "UllmansAlgorithm.h"
 #include "UllmansAlgorithm_vector.h"
 #include "FocusSearch.h"
+#include "CMAlgorithm.h"
 #include "Test.h"
 
 void print_matrix(std::vector<std::vector<int>>& v) {

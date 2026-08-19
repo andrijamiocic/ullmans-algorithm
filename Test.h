@@ -1,6 +1,7 @@
 #pragma once
 #include "UllmansAlgorithm.h"
 #include "FocusSearch.h"
+#include "CMAlgorithm.h"
 
 /*
 a class to implement tests
