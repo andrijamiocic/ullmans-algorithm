@@ -7,12 +7,6 @@ BitVector::BitVector(int n) {
     b_vector_data.assign(blocks, 0);
 }
 
-bool BitVector::getElement(int index) {
-    int block = index / 64;
-    int block_index = index % 64;
-    return  (b_vector_data[block] & (1ULL << block_index)) != 0;
-}
-
 void BitVector::setOne(int index) {
     int block = index / 64;
     int block_index = index % 64;

@@ -9,7 +9,11 @@ class BitVector{
 
 public:
     BitVector(int n); // constuctor - n is the number of stored bits, all assigned 0
-    bool getElement(int index);
+    bool getElement(int index) {
+        int block = index / 64;
+        int block_index = index % 64;
+        return  (b_vector_data[block] & (1ULL << block_index)) != 0;
+    }
     void setOne(int index);
     void setZero(int index);
     bool intersectionNotEmpty(BitVector& b); 

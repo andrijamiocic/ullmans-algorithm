@@ -12,23 +12,18 @@ int CMAlgorithm::choose_k(int k) {
             res = k;
             break;
         }
-    }while ( k < h_n - 1 ) {
-        k++;
-        if (M[v].getElement(k)) {
-            M[v].setZero(k);
-            M_log_stack_xy.push({v, k});
-            int n = M_log_stack.top();
-            M_log_stack.pop();
-            M_log_stack.push(n+1);
+    }
+    if (res != -1) {
+        for (int j = 0; j < h_n; j++) {
+            if (j != res && M[v].getElement(j)) {
+                M[v].setZero(j);
+                M_log_stack_xy.push({v, j});
+                int n = M_log_stack.top();
+                M_log_stack.pop();
+                M_log_stack.push(n+1);
+            }
         }
     }
-    // the bit method implemented below has proven to be slower for a fraction of time for some reason
-    /*
-    k = M[depth][depth].nextOnePosition(k);
-    while (k != -1) {
-        if (!paired_verteces[k]){return k;}
-        k = M[depth][depth].nextOnePosition(k);
-    }*/
     return res;
 }
 
@@ -89,12 +84,12 @@ int CMAlgorithm::refine(int r, int c){
         for (auto i : G.neighbours(r+1)) {
             int v = i-1;
             for (auto j : H.neighbours(c+1)) {
-                if ( !M[v].getElement(j) ) { continue; }
+                if ( !M[v].getElement(j-1) ) { continue; }
                 // check the condition
                 // if not satisfied -> M_d[i][j] = 0 and changed = 1
-                if ( !refinementConditionSatisfied(v, j)) {
-                    M[v].setZero(j);
-                    M_log_stack_xy.push({v, j});
+                if ( !refinementConditionSatisfied(v, j-1)) {
+                    M[v].setZero(j-1);
+                    M_log_stack_xy.push({v, j-1});
                     int n = M_log_stack.top();
                     M_log_stack.pop();
                     M_log_stack.push(n+1);
@@ -158,31 +153,46 @@ void CMAlgorithm::initialize() {
 int CMAlgorithm::findIsomorphisms() {
     initialize();
     int v;
-    int refinement_satisfied = refine_full();
+    if (!refine_full()) {
+        return 0; 
+    }
+
     while (1) {
         M_log_stack.push(0);
         k = choose_k(k);
-        if (k == -1 || !refinement_satisfied){
-            if (depth == 0) {
-                return 0;
-            }
+
+        if (k == -1) {
+            M_log_stack.pop();
+            if (depth == 0) {return 0;}
             depth--;
             v = instOrder[depth];
             paired_verteces[column_chosen[v]] = 0;
-            k = column_chosen[v];
+            k = column_chosen[v]; 
             column_chosen[v] = -1;
-            restore_M();
-        }
-        else{
+            restore_M(); 
+        } 
+        else {
             v = instOrder[depth];
             column_chosen[v] = k;
             paired_verteces[k] = 1;
-            if (depth == g_n - 1) {
-                isomorphism_found.push_back(column_chosen); //because the refinement procedure verified the solution, we dont need to
+            
+            if (refine(v, k)) {
+                if (depth == g_n - 1) {
+                    isomorphism_found.push_back(column_chosen);
+                    
+                    paired_verteces[k] = 0;
+                    column_chosen[v] = -1;
+                    restore_M();
+                } else {
+                    depth++;
+                    k = -1; 
+                }
+            } 
+            else {
+                paired_verteces[k] = 0;
+                column_chosen[v] = -1;
+                restore_M();
             }
-            refine(v, k);
-            depth++;
-            k = -1;
         }
     }
 }

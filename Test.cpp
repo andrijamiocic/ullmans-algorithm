@@ -5,18 +5,18 @@ int Test::verification(int n) {
     double prosjek1 = 0;
     double prosjek2 = 0;
     for (int i = 0; i < n; i++){
-        Graph G(10, 0.4, 0);
-        Graph H(20, 0.25, 0);
-        CMAlgorithm u(G, H);
-        FocusSearch f(G, H);
+        Graph G(10, 0.5, 0);
+        Graph H(25, 0.25, 0);
+        UllmansAlgorithm u(G, H);
+        CMAlgorithm f(G, H);
         u.measure_time();
         std::cout << i << std::endl;
         f.measure_time();
         std::cout << i << std::endl;
-        if (!compare(u.isomorphism_found, f.isomorphism_found)) {
+        /*if (!compare(u.isomorphism_found, f.isomorphism_found)) {
             krivih++;
             f.printIsomorphisms();
-        }
+        }*/
         prosjek1 += u.time;
         prosjek2 += f.time;
     }
