@@ -5,10 +5,10 @@ int Test::verification(int n) {
     double prosjek1 = 0;
     double prosjek2 = 0;
     for (int i = 0; i < n; i++){
-        Graph G(10, 0.5, 0);
-        Graph H(25, 0.25, 0);
-        UllmansAlgorithm u(G, H);
-        CMAlgorithm f(G, H);
+        DirectedGraph G(10, 0.3);
+        DirectedGraph H(25, 0.5);
+        FocusSearchDirected u(G, H);
+        CMAlgorithmDirected f(G, H);
         u.measure_time();
         std::cout << i << std::endl;
         f.measure_time();
@@ -26,6 +26,16 @@ int Test::verification(int n) {
     std::cout << "Stari: " << prosjek1 << std::endl;
     std::cout << "Novi: " << prosjek2 << std::endl;
     return krivih;
+}
+
+void Test::store_graphs(int size) {
+    for (int i = 0; i < 100; i++) {
+        Graph G(int((size)/2), 0.6);
+        Graph H(size, 0.2);
+        G.toFile("graphs/G_"+std::to_string(i));
+        H.toFile("graphs/H_"+std::to_string(i));
+    }
+    return;
 }
 
 int Test::compare(std::vector<std::vector<int>>& v1, std::vector<std::vector<int>>& v2){

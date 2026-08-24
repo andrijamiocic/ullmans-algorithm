@@ -1,14 +1,14 @@
-#include "DepthFirstSearch.h"
+#include "DepthFirstSearchDirected.h"
 #include <iostream>
 #include <chrono>
 
-void DepthFirstSearch::M0() {
+void DepthFirstSearchDirected::M0() {
     // G must have a lesser number of vertices to have an isomorphism subgraph
     if ( g_n > h_n ) { return; }
     for ( int i = 0; i < g_n; i++ ) {
         M_0.push_back({});
         for ( int j = 0; j < h_n; j++ ) {
-            if ( G.degree(i+1) <= H.degree(j+1) ) {
+            if ( G.in_degree(i+1) <= H.degree(j+1) && G.degree(i+1) <= H.degree(j+1) ) {
                 M_0[i].push_back(1);
             }else {
                 M_0[i].push_back(0);
@@ -18,7 +18,7 @@ void DepthFirstSearch::M0() {
     return;
 }
 
-int DepthFirstSearch::choose_k(int k) {
+int DepthFirstSearchDirected::choose_k(int k) {
     if ( depth == g_n ) {return -1;}
     while ( k < h_n - 1 ) {
         k++;
@@ -29,7 +29,7 @@ int DepthFirstSearch::choose_k(int k) {
     return -1;
 }
 
-int DepthFirstSearch::checkIsomorphism(){
+int DepthFirstSearchDirected::checkIsomorphism(){
     for ( int i = 0; i < g_n;  i++ ){
         for ( int j = i + 1; j < g_n; j++ ){
             if ( G.edge(i+1, j+1) && !H.edge(column_chosen[i]+1, column_chosen[j]+1) ){return 0;}
@@ -39,7 +39,7 @@ int DepthFirstSearch::checkIsomorphism(){
     return 1;
 }
 
-void DepthFirstSearch::printIsomorphisms(){
+void DepthFirstSearchDirected::printIsomorphisms(){
     std::cout << "Isomorphisms:\n";
     for (std::vector<int> isomorphism : isomorphism_found) {
         for (int v : isomorphism) {
@@ -50,7 +50,7 @@ void DepthFirstSearch::printIsomorphisms(){
     return;
 }
 
-void DepthFirstSearch::initialize(){
+void DepthFirstSearchDirected::initialize(){
     M0();
     depth = 0;
     k = -1;
@@ -59,7 +59,7 @@ void DepthFirstSearch::initialize(){
     return;
 }
 
-int DepthFirstSearch::findIsomorphisms(){
+int DepthFirstSearchDirected::findIsomorphisms(){
     initialize();
     while (1) {
         k = choose_k(k);
@@ -84,7 +84,7 @@ int DepthFirstSearch::findIsomorphisms(){
     }
 }
 
-void DepthFirstSearch::measure_time(){
+void DepthFirstSearchDirected::measure_time(){
     auto start = std::chrono::high_resolution_clock::now();
     findIsomorphisms();
     auto end = std::chrono::high_resolution_clock::now();

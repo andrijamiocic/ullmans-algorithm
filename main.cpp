@@ -9,10 +9,14 @@
 #include "BitVector.h"
 #include "DepthFirstSearch.h"
 #include "UllmansAlgorithm.h"
-#include "UllmansAlgorithm_vector.h"
 #include "FocusSearch.h"
 #include "CMAlgorithm.h"
+#include "UllmansAlgorithmDirected.h"
+#include "FocusSearchDirected.h"
+#include "CMAlgorithmDirected.h"
+
 #include "Test.h"
+
 
 void print_matrix(std::vector<std::vector<int>>& v) {
     for ( std::vector<int> v1 : v ) {
@@ -25,21 +29,13 @@ void print_matrix(std::vector<std::vector<int>>& v) {
     return;
 }
 
-void store_graphs(int size) {
-    for (int i = 0; i < 100; i++) {
-        Graph G(int((size)/2), 0.6, 0);
-        Graph H(size, 0.2, 0);
-        G.toFile("graphs/G_"+std::to_string(i));
-        H.toFile("graphs/H_"+std::to_string(i));
-    }
-    return;
-}
+
 
 void store_test_results_u(const std::string& filename){
     std::ofstream out_file(filename);
     for (int i = 0; i < 100; i++) {
-        Graph G("graphs/G_"+std::to_string(i), 0);
-        Graph H("graphs/H_"+std::to_string(i), 0);
+        Graph G("graphs/G_"+std::to_string(i));
+        Graph H("graphs/H_"+std::to_string(i));
         UllmansAlgorithm u(G, H);
         u.measure_time();
         out_file << u.time << "\n";
@@ -56,8 +52,8 @@ void store_test_results_u(const std::string& filename){
 void store_test_results_f(const std::string& filename){
     std::ofstream out_file(filename);
     for (int i = 0; i < 100; i++) {
-        Graph G("graphs/G_"+std::to_string(i), 0);
-        Graph H("graphs/H_"+std::to_string(i), 0);
+        Graph G("graphs/G_"+std::to_string(i));
+        Graph H("graphs/H_"+std::to_string(i));
         FocusSearch f(G, H);
         f.measure_time();
         out_file << f.time << "\n";

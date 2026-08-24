@@ -1,7 +1,6 @@
-#include "UllmansAlgorithm.h"
+#include "UllmansAlgorithmDirected.h"
 
-
-int UllmansAlgorithm::choose_k(int k) {
+int UllmansAlgorithmDirected::choose_k(int k) {
     if ( depth == g_n ) {return -1;}
     int v = instOrder[depth];
     while ( k < h_n - 1 ) {
@@ -20,7 +19,7 @@ int UllmansAlgorithm::choose_k(int k) {
     return -1;
 }
 
-int UllmansAlgorithm::refinementConditionSatisfied(int i, int j) {
+int UllmansAlgorithmDirected::refinementConditionSatisfied(int i, int j) {
     //for each neighbour n of i+1 there must be a 1 in the n-1th row so that its column+1 and j+1 are neighbours 
     // AND that column is not used
 
@@ -28,15 +27,20 @@ int UllmansAlgorithm::refinementConditionSatisfied(int i, int j) {
     // this would maybe slow down the algorithm and actually is not the part of the original algorithm
 
     std::vector<BitVector>& M_d = M[depth];
-    for (int n : G.neighbours(i+1)) {
-        if (!M_d[n-1].intersectionNotEmpty(H_adj_matrix[j])){
+    for (int n : G.in_neighbours(i+1)) {
+        if (!M_d[n-1].intersectionNotEmpty(H_adj_matrix_in[j])){
+            return 0;
+        }
+    }
+    for (int n : G.out_neighbours(i+1)) {
+        if (!M_d[n-1].intersectionNotEmpty(H_adj_matrix_out[j])){
             return 0;
         }
     }
     return 1;
 }
 
-int UllmansAlgorithm::refine() {
+int UllmansAlgorithmDirected::refine() {
     std::vector<BitVector>& M_d = M[depth];
     int changed = 1;
     while ( changed ) {
@@ -71,7 +75,7 @@ int UllmansAlgorithm::refine() {
     return 1;
 }
 
-void UllmansAlgorithm::generateMd() {
+void UllmansAlgorithmDirected::generateMd() {
     M[depth] = M[depth-1];
     int v = instOrder[depth-1];
     M[depth][v].mask(column_chosen[v]);
@@ -82,13 +86,13 @@ void UllmansAlgorithm::generateMd() {
     return;
 }
 
-void UllmansAlgorithm::M0() {
+void UllmansAlgorithmDirected::M0() {
     // G must have a lesser number of vertices to have an isomorphism subgraph
     M_root.assign(g_n, BitVector(h_n));
     if ( g_n > h_n ) { return; }
     for ( int i = 0; i < g_n; i++ ) {
         for ( int j = 0; j < h_n; j++ ) {
-            if ( G.degree(i+1) <= H.degree(j+1) ) {
+            if ( G.in_degree(i+1) <= H.in_degree(j+1) && G.out_degree(i+1) <= H.out_degree(j+1)) {
                 M_root[i].setOne(j);
             }
         }
@@ -96,14 +100,21 @@ void UllmansAlgorithm::M0() {
     return;
 }
 
-void UllmansAlgorithm::initialize() {
+void UllmansAlgorithmDirected::initialize() {
     // initialize adjecency bitmatrices of H
-    H_adj_matrix.assign(h_n, BitVector(h_n));
+    H_adj_matrix_out.assign(h_n, BitVector(h_n));
     for (int i = 0; i < h_n; i++) {
         for (int j = 0; j < h_n; j++) {
             if (H.edge(i+1, j+1)) {
-                H_adj_matrix[i].setOne(j);
-                H_adj_matrix[j].setOne(i);
+                H_adj_matrix_out[i].setOne(j);
+            }
+        }
+    }
+    H_adj_matrix_in.assign(h_n, BitVector(h_n));
+    for (int i = 0; i < h_n; i++) {
+        for (int j = 0; j < h_n; j++) {
+            if (H.edge(j+1, i+1)) {
+                H_adj_matrix_in[i].setOne(j);
             }
         }
     }
@@ -120,7 +131,7 @@ void UllmansAlgorithm::initialize() {
     return;
 }
 
-int UllmansAlgorithm::findIsomorphisms() {
+int UllmansAlgorithmDirected::findIsomorphisms() {
     initialize();
     int v;
     while (1) {
@@ -151,14 +162,14 @@ int UllmansAlgorithm::findIsomorphisms() {
     }
 }
 
-bool UllmansAlgorithm::InstantiationOrder::Comparator::operator()(int u, int v) const {
+bool UllmansAlgorithmDirected::InstantiationOrder::Comparator::operator()(int u, int v) const {
     if (G.degree(u+1) != G.degree(v+1)) {
         return G.degree(u+1) > G.degree(v+1); // we want the bigger one
     }
     return u < v; // in case of a draw, just return the smaller vertex for determinism
 }
 
-void UllmansAlgorithm::InstantiationOrder::getOrder(std::vector<int>& order) {
+void UllmansAlgorithmDirected::InstantiationOrder::getOrder(std::vector<int>& order) {
     Comparator C(G);
     std::set<int, Comparator> vertices(C);
     int g_n = G.get_v_num();

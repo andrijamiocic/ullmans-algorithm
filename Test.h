@@ -2,6 +2,9 @@
 #include "UllmansAlgorithm.h"
 #include "FocusSearch.h"
 #include "CMAlgorithm.h"
+#include "UllmansAlgorithmDirected.h"
+#include "FocusSearchDirected.h"
+#include "CMAlgorithmDirected.h"
 
 /*
 a class to implement tests
@@ -20,7 +23,10 @@ a class to implement tests
 class Test{
 public:
     
+    void store_graphs(int size);
     int verification(int n);
+    int Ullmans(int number, std::string filename);
+    int UllmansDirected(int number, std::string filename);
 
 private:
 

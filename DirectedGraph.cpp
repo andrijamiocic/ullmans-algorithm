@@ -1,4 +1,4 @@
-#include "graph.h"
+#include "Directedgraph.h"
 #include <iostream>
 #include <fstream>
 #include <string>
@@ -6,7 +6,7 @@
 #include <vector>
 #include <random>
 
-Graph::Graph(std::string filename) {
+DirectedGraph::DirectedGraph(std::string filename) {
     std::ifstream FILE(filename + ".txt");
     std::string line;
     int v1, v2;
@@ -15,11 +15,14 @@ Graph::Graph(std::string filename) {
         std::stringstream ss(line);
         ss >> v_num;
         adj_matrix = {};
-        adj_list = {};
+        adj_list_in = {};
+        adj_list_out = {};
         for (int i = 0; i < v_num; i++){
             std::vector<int> zero_vector(v_num);
             adj_matrix.push_back(zero_vector);
-            adj_list.push_back({});
+            adj_list_in.push_back({});            
+            adj_list_out.push_back({});
+
         }
     }
     while (getline(FILE, line)) {
@@ -29,21 +32,23 @@ Graph::Graph(std::string filename) {
     }
 }
 
-Graph::Graph(int v_number, double p){
+DirectedGraph::DirectedGraph(int v_number, double p){
     v_num = v_number;
     e_num = 0;
     adj_matrix = {};
-    adj_list = {};
+    adj_list_in = {};
+    adj_list_out = {};
     for (int i = 0; i < v_num; i++){
         std::vector<int> zero_vector(v_num);
         adj_matrix.push_back(zero_vector);
-        adj_list.push_back({});
+        adj_list_in.push_back({});            
+        adj_list_out.push_back({});
     }
     std::random_device rd;  
     std::mt19937 gen(rd());
     std::uniform_real_distribution<> distribution(0.0, 1.0);
     for (int v1 = 0; v1 < v_num; v1++) {
-        for (int v2 = 0; v2 < v1; v2++) {
+        for (int v2 = 0; v2 < v_num; v2++) {
             if (v1 == v2) {continue;}
             double random_value = distribution(gen);
             if (random_value <= p){
@@ -53,7 +58,7 @@ Graph::Graph(int v_number, double p){
     }
 }
 
-bool Graph::toFile(const std::string& filename) {
+bool DirectedGraph::toFile(const std::string& filename) {
     std::ofstream out_file(filename+".txt");
     
     if (!out_file.is_open()) {return false;}
@@ -71,7 +76,7 @@ bool Graph::toFile(const std::string& filename) {
     return true;
 }
 
-void Graph::printAdjMatrix() {
+void DirectedGraph::printAdjMatrix() {
     for (int i = 0; i < v_num; i++) {
         for (int j = 0; j < v_num; j++) {
             std::cout << adj_matrix [i][j] << " ";
@@ -82,7 +87,7 @@ void Graph::printAdjMatrix() {
     return;
 }
 
-void Graph::printAdjList() {
+void DirectedGraph::printAdjList() {
     for (int i = 0; i < v_num; i++) {
         std::cout << i << ": ";
         std::cout << degree(i+1);
@@ -92,11 +97,10 @@ void Graph::printAdjList() {
     return;
 }
 
-void Graph::insertEdge(int v1, int v2) {
+void DirectedGraph::insertEdge(int v1, int v2) {
     adj_matrix[v1-1][v2-1] = 1;
-    adj_list[v1-1].push_back(v2);
-    adj_matrix[v2-1][v1-1] = 1;
-    adj_list[v2-1].push_back(v1);
+    adj_list_out[v1-1].push_back(v2);
+    adj_list_in[v2-1].push_back(v1);
     e_num++;
     return;
 }
