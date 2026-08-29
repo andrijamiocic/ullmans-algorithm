@@ -1,4 +1,7 @@
 #pragma once
+#include <iostream>
+#include <fstream>
+#include <sstream>
 #include "UllmansAlgorithm.h"
 #include "FocusSearch.h"
 #include "CMAlgorithm.h"
@@ -23,10 +26,10 @@ a class to implement tests
 class Test{
 public:
     
-    void store_graphs(int size);
+    void store_graphs();
     int verification(int n);
-    int Ullmans(int number, std::string filename);
-    int UllmansDirected(int number, std::string filename);
+    void runTest(std::string filename, int g_n, double g_density, int h_n, double h_density, int n);
+    void runTestDirected(std::string filename, int g_n, double g_density, int h_n, double h_density, int n);
 
 private:
 

@@ -28,10 +28,10 @@ int Test::verification(int n) {
     return krivih;
 }
 
-void Test::store_graphs(int size) {
+void Test::store_graphs() {
     for (int i = 0; i < 100; i++) {
-        Graph G(int((size)/2), 0.6);
-        Graph H(size, 0.2);
+        Graph G(int((50)/2), 0.6);
+        Graph H(50, 0.2);
         G.toFile("graphs/G_"+std::to_string(i));
         H.toFile("graphs/H_"+std::to_string(i));
     }
@@ -52,4 +52,43 @@ int Test::compare(std::vector<std::vector<int>>& v1, std::vector<std::vector<int
             if (!ok) {return 0;}
         }
         return 1;
+}
+
+void Test::runTest(std::string filename, int g_n, double g_density, int h_n, double h_density, int n){
+    std::ofstream out_file(filename);
+    for (int i = 0; i < n; i++) {
+        Graph G(g_n, g_density);
+        Graph H(h_n, h_density);
+        //UllmansAlgorithm u(G, H);
+        CMAlgorithm c(G, H);
+        FocusSearch f(G, H);
+        //u.measure_time();
+        c.measure_time();
+        f.measure_time();
+        //out_file << u.time << " ";
+        out_file << c.time << " ";
+        out_file << f.time << "\n";
+        std::cout << i << std::endl;
+    }
+    out_file.close();
+    return;
+}
+
+void Test::runTestDirected(std::string filename, int g_n, double g_density, int h_n, double h_density, int n){
+    std::ofstream out_file(filename);
+    for (int i = 0; i < n; i++) {
+        DirectedGraph G(g_n, g_density);
+        DirectedGraph H(h_n, h_density);
+        UllmansAlgorithmDirected u(G, H);
+        CMAlgorithmDirected c(G, H);
+        FocusSearchDirected f(G, H);
+        u.measure_time();
+        c.measure_time();
+        f.measure_time();
+        out_file << u.time << " ";
+        out_file << c.time << " ";
+        out_file << f.time << "\n";
+    }
+    out_file.close();
+    return;
 }

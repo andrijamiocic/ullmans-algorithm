@@ -104,6 +104,6 @@ int main(){
     store_test_results_f("results_f.txt");
     compare("results_u.txt", "results_f.txt");*/
     Test t;
-    t.verification(50);
+    t.runTest("rezultati1.txt", 30, 0.25, 1000, 0.01, 100);
     return 0;
 }
