@@ -21,16 +21,14 @@ private:
     int h_n;
     std::vector<BitVector> H_adj_matrix; // only bit-representation of H is needed
     int depth; // current depth in search tree
-    int current_vertex; // = instOrder[depth]. Because of vetrex oredering this is not the same as depth.
     std::vector<BitVector> M0; // bit-matrix that stores inital domain of each pattern graph vertex as a bitset
-    std::vector<BitVector> M; // same as M, but used for searc tree and is changed constantly : TEMPORARY SIMPLIFIED SOLUTION!!
+    std::vector<BitVector> M; // same as M, but used for searc tree and is changed constantly
     std::vector<std::vector<int>> M0_list; // M0 as a vector, used for iteration
     std::vector<int> M0_index; // M0_index[i] = index of the current instantiation in M0_list[i]
     int k; // index of the last instantiated variable within M0_list
     std::vector<int> instOrder; // a list of G vertices, ordered by instantiation priority
     std::vector<int> lastNeighbour; // lastNeigbour[u]=v <=> v is the last adjacent vertex to u before u
     std::vector<std::vector<int>> nextNeighbours; //nextNeigbours[u] = {v; lastNeighbour[v]=u}
-    std::vector<std::vector<std::vector<int>>> seList;
     std::vector<int> paired_verteces; // paired_verteces[v] = 1 iff some vetrex of G has been instantiated to vertex v of graph H
     std::vector<int> Isomorphism_function; // the main isomporphism function
     void get_k();

@@ -2,6 +2,7 @@
 #include <iostream>
 #include <vector>
 #include <set>
+#include <chrono>
 #include "DepthFirstSearch.h"
 #include "BitVector.h"
 

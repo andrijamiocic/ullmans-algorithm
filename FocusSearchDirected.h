@@ -22,9 +22,8 @@ private:
     std::vector<BitVector> H_adj_matrix_out; // only bit-representation of H is needed
     std::vector<BitVector> H_adj_matrix_in;
     int depth; // current depth in search tree
-    int current_vertex; // = instOrder[depth]. Because of vetrex oredering this is not the same as depth.
     std::vector<BitVector> M0; // bit-matrix that stores inital domain of each pattern Directedgraph vertex as a bitset
-    std::vector<BitVector> M; // same as M, but used for searc tree and is changed constantly : TEMPORARY SIMPLIFIED SOLUTION!!
+    std::vector<BitVector> M; // same as M, but used for searc tree and is changed constantly
     std::vector<std::vector<int>> M0_list; // M0 as a vector, used for iteration
     std::vector<int> M0_index; // M0_index[i] = index of the current instantiation in M0_list[i]
     int k; // index of the last instantiated variable within M0_list

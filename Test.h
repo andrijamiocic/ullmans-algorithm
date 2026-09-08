@@ -28,8 +28,8 @@ public:
     
     void store_graphs();
     int verification(int n);
-    void runTest(std::string filename, int g_n, double g_density, int h_n, double h_density, int n);
-    void runTestDirected(std::string filename, int g_n, double g_density, int h_n, double h_density, int n);
+    void runTest(int g_n, double g_density, double gh_ratio, double h_density, int n, int algorithm); // DFS = 1, Ullman = 2, FS = 3, CM = 4
+    void runTestDirected(int g_n, double g_density, double gh_ratio, double h_density, int n, int algorithm); // DFS = 1, Ullman = 2, FS = 3, CM = 4
 
 private:
 

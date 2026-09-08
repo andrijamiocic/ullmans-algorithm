@@ -4,6 +4,7 @@
 #include <set>
 #include <stack>
 #include <utility>
+#include <chrono>
 #include "DepthFirstSearchDirected.h"
 #include "BitVector.h"
 

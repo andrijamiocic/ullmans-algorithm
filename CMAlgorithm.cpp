@@ -135,6 +135,9 @@ void CMAlgorithm::initialize() {
 }
 
 int CMAlgorithm::findIsomorphisms() {
+    int timeout = 0;
+    int counter = 0;
+    auto start = std::chrono::high_resolution_clock::now();
     initialize();
     int v;
     if (!refine_full()) {
@@ -147,7 +150,7 @@ int CMAlgorithm::findIsomorphisms() {
 
         if (k == -1) {
             M_log_stack.pop();
-            if (depth == 0) {return 0;}
+            if (depth == 0) {break;}
             depth--;
             v = instOrder[depth];
             paired_verteces[column_chosen[v]] = 0;
@@ -178,7 +181,25 @@ int CMAlgorithm::findIsomorphisms() {
                 restore_M();
             }
         }
+        counter++;
+        if (counter == 10000){
+            auto now = std::chrono::high_resolution_clock::now();
+            auto duration = std::chrono::duration_cast<std::chrono::microseconds>(now - start);
+            if (duration.count()>60000000){
+                timeout = 1;
+                break;
+            }
+            counter = 0;
+        }
     }
+    if(timeout) {
+        time = -1;
+        return -1;
+    }
+    auto end = std::chrono::high_resolution_clock::now();
+    auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
+    time = duration.count();
+    return 0;
 }
 
 void CMAlgorithm::restore_M(){

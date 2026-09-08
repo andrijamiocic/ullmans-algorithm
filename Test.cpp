@@ -1,22 +1,24 @@
 #include "Test.h"
+#include <future>
 
 int Test::verification(int n) {
     int krivih = 0;
     double prosjek1 = 0;
     double prosjek2 = 0;
     for (int i = 0; i < n; i++){
-        DirectedGraph G(10, 0.3);
-        DirectedGraph H(25, 0.5);
-        FocusSearchDirected u(G, H);
-        CMAlgorithmDirected f(G, H);
-        u.measure_time();
+        Graph G(40, 0.3);
+        Graph H(80, 0.2);
+        UllmansAlgorithm u(G, H);
+        FocusSearch f(G, H);
+        u.findIsomorphisms();
         std::cout << i << std::endl;
-        f.measure_time();
+        f.findIsomorphisms();
         std::cout << i << std::endl;
-        /*if (!compare(u.isomorphism_found, f.isomorphism_found)) {
+        std::cout << "isomorphisms: " << u.isomorphism_found.size() << std::endl;  
+        if (!compare(u.isomorphism_found, f.isomorphism_found)) {
             krivih++;
-            f.printIsomorphisms();
-        }*/
+            //f.printIsomorphisms();
+        }
         prosjek1 += u.time;
         prosjek2 += f.time;
     }
@@ -54,41 +56,91 @@ int Test::compare(std::vector<std::vector<int>>& v1, std::vector<std::vector<int
         return 1;
 }
 
-void Test::runTest(std::string filename, int g_n, double g_density, int h_n, double h_density, int n){
-    std::ofstream out_file(filename);
+void Test::runTest(int g_n, double g_density, double gh_ratio, double h_density, int n, int algorithm){
+    std::ofstream out_file("rezultati/undirected_"+std::to_string(algorithm)+ "_"+std::to_string(g_n) + "_"+std::to_string(gh_ratio)+"_"+std::to_string(g_density)+"_"+std::to_string(h_density));
+    int timeout = 0;
+    int h_n = int(g_n/gh_ratio); 
+    std::cout << "undirected: g_n=" << g_n << " g_density= " 
+    << g_density << " h_n= " << h_n << " h_density= " 
+    << h_density << " alg=" << algorithm << std::endl;
     for (int i = 0; i < n; i++) {
         Graph G(g_n, g_density);
         Graph H(h_n, h_density);
-        //UllmansAlgorithm u(G, H);
-        CMAlgorithm c(G, H);
-        FocusSearch f(G, H);
-        //u.measure_time();
-        c.measure_time();
-        f.measure_time();
-        //out_file << u.time << " ";
-        out_file << c.time << " ";
-        out_file << f.time << "\n";
-        std::cout << i << std::endl;
+        long long measured_time = -1;
+
+        if (algorithm == 1) {
+            DepthFirstSearch d(G, H);
+            d.findIsomorphisms();
+            measured_time = d.time;
+        } else if (algorithm == 2) {
+            UllmansAlgorithm u(G, H);
+            u.findIsomorphisms();
+            measured_time = u.time;
+        } else if (algorithm == 3) {
+            FocusSearch f(G, H);
+            f.findIsomorphisms();
+            measured_time = f.time;
+        } else if (algorithm == 4) {
+            CMAlgorithm c(G, H);
+            c.findIsomorphisms();
+            measured_time = c.time;
+        }
+
+        out_file << measured_time << "\n";
+        
+        if (measured_time == -1) {
+            timeout++;
+        }
+        if (timeout == 4) {
+            break;
+        }
     }
+    std::cout << "done!" << std::endl;
     out_file.close();
     return;
 }
 
-void Test::runTestDirected(std::string filename, int g_n, double g_density, int h_n, double h_density, int n){
-    std::ofstream out_file(filename);
+void Test::runTestDirected(int g_n, double g_density, double gh_ratio, double h_density, int n, int algorithm){
+    std::ofstream out_file("rezultati/directed_"+std::to_string(algorithm)+ "_"+std::to_string(g_n) + "_"+std::to_string(gh_ratio)+"_"+std::to_string(g_density)+"_"+std::to_string(h_density));
+    int timeout = 0;
+    int h_n = int(g_n/gh_ratio);    
+    std::cout << "directed: g_n=" << g_n << " g_density= " 
+    << g_density << " h_n= " << h_n << " h_density= " 
+    << h_density << " alg=" << algorithm << std::endl;
+    
     for (int i = 0; i < n; i++) {
         DirectedGraph G(g_n, g_density);
         DirectedGraph H(h_n, h_density);
-        UllmansAlgorithmDirected u(G, H);
-        CMAlgorithmDirected c(G, H);
-        FocusSearchDirected f(G, H);
-        u.measure_time();
-        c.measure_time();
-        f.measure_time();
-        out_file << u.time << " ";
-        out_file << c.time << " ";
-        out_file << f.time << "\n";
+        long long measured_time = -1;
+
+        if (algorithm == 1) {
+            DepthFirstSearchDirected d(G, H);
+            d.findIsomorphisms();
+            measured_time = d.time;
+        } else if (algorithm == 2) {
+            UllmansAlgorithmDirected u(G, H);
+            u.findIsomorphisms();
+            measured_time = u.time;
+        } else if (algorithm == 3) {
+            FocusSearchDirected f(G, H);
+            f.findIsomorphisms();
+            measured_time = f.time;
+        } else if (algorithm == 4) {
+            CMAlgorithmDirected c(G, H);
+            c.findIsomorphisms();
+            measured_time = c.time;
+        }
+
+        out_file << measured_time << "\n";
+        
+        if (measured_time == -1) {
+            timeout++;
+        }
+        if (timeout == 2) {
+            break;
+        }
     }
+    std::cout << "done!" << std::endl;
     out_file.close();
     return;
 }

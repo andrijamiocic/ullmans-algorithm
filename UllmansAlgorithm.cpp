@@ -121,6 +121,9 @@ void UllmansAlgorithm::initialize() {
 }
 
 int UllmansAlgorithm::findIsomorphisms() {
+    int timeout = 0;
+    int counter = 0;
+    auto start = std::chrono::high_resolution_clock::now();
     initialize();
     int v;
     while (1) {
@@ -128,7 +131,7 @@ int UllmansAlgorithm::findIsomorphisms() {
         k = choose_k(k);
         if (k == -1 || !refinemet_satisfied){
             if (depth == 0) {
-                return 0;
+                break;
             }
             depth--;
             v = instOrder[depth];
@@ -148,7 +151,25 @@ int UllmansAlgorithm::findIsomorphisms() {
             generateMd();
             k = -1;
         }
+        counter++;
+        if (counter == 10000){
+            auto now = std::chrono::high_resolution_clock::now();
+            auto duration = std::chrono::duration_cast<std::chrono::microseconds>(now - start);
+            if (duration.count()>60000000){
+                timeout = 1;
+                break;
+            }
+            counter = 0;
+        }
     }
+    if(timeout) {
+        time = -1;
+        return -1;
+    }
+    auto end = std::chrono::high_resolution_clock::now();
+    auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
+    time = duration.count();
+    return 0;
 }
 
 bool UllmansAlgorithm::InstantiationOrder::Comparator::operator()(int u, int v) const {

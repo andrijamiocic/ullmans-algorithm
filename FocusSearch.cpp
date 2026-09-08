@@ -144,6 +144,9 @@ void FocusSearch::get_k(){
 
 
 int FocusSearch::findIsomorphisms(){
+    int timeout = 0;
+    int counter = 0;
+    auto start = std::chrono::high_resolution_clock::now();
     if (g_n > h_n) {return 0;}
     initialize();
     int refinemet_satisfied = 1;
@@ -151,7 +154,7 @@ int FocusSearch::findIsomorphisms(){
         get_k();
         if (k == -1 || !refinemet_satisfied){
             if (depth == 0) {
-                return 0;
+                break;
             }
             depth--;
             
@@ -173,8 +176,27 @@ int FocusSearch::findIsomorphisms(){
             depth++;
             k = -1;
         }
+        counter++;
+        if (counter == 10000){
+            auto now = std::chrono::high_resolution_clock::now();
+            auto duration = std::chrono::duration_cast<std::chrono::microseconds>(now - start);
+            if (duration.count()>60000000){
+                timeout = 1;
+                break;
+            }
+            counter = 0;
+        }
     }
+    if(timeout) {
+        time = -1;
+        return -1;
+    }
+    auto end = std::chrono::high_resolution_clock::now();
+    auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
+    time = duration.count();
+    return 0;
 }
+
 void FocusSearch::InstantiationOrder::getHeuristic() {
     std::vector<int> branch;
     for (int i = 0; i < g_n; i++ ){
