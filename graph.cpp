@@ -4,6 +4,7 @@
 #include <string>
 #include <sstream>
 #include <vector>
+#include <set>
 #include <random>
 
 Graph::Graph(std::string filename) {
@@ -53,6 +54,49 @@ Graph::Graph(int v_number, double p){
     }
 }
 
+Graph::Graph(Graph& G, int v_number, double p){
+    v_num = v_number;
+    e_num = 0;
+    adj_matrix = {};
+    adj_list = {};
+    for (int i = 0; i < v_num; i++){
+        std::vector<int> zero_vector(v_num);
+        adj_matrix.push_back(zero_vector);
+        adj_list.push_back({});
+    }
+    std::random_device rd;
+    std::mt19937 gen(rd());
+    std::uniform_int_distribution<> distrib(1, v_num);
+    std::vector<int> isomorphism;
+    std::set<int> used;
+    int random_int;
+    for (int i = 0; i < G.get_v_num(); i++){
+        do {
+            random_int = distrib(gen);
+        }
+        while (used.count(random_int));
+        isomorphism.push_back(random_int);
+        used.insert(random_int);
+    }
+    for (int i = 0; i < G.get_v_num(); i++){
+        for (int j = 0; j < G.adj_list[i].size(); j++){
+            insertEdge(isomorphism[i], isomorphism[G.adj_list[i][j]-1]);
+        }
+    }
+    std::random_device rd1;  
+    std::mt19937 gen1(rd1());
+    std::uniform_real_distribution<> distribution(0.0, 1.0);
+    for (int v1 = 0; v1 < v_num; v1++) {
+        for (int v2 = 0; v2 < v1; v2++) {
+            if (v1 == v2) {continue;}
+            double random_value = distribution(gen1);
+            if (random_value <= p){
+                insertEdge(v1+1, v2+1);
+            }
+        }
+    }
+}
+
 bool Graph::toFile(const std::string& filename) {
     std::ofstream out_file(filename+".txt");
     
@@ -93,6 +137,7 @@ void Graph::printAdjList() {
 }
 
 void Graph::insertEdge(int v1, int v2) {
+    if (edge(v1, v2)){return;}
     adj_matrix[v1-1][v2-1] = 1;
     adj_list[v1-1].push_back(v2);
     adj_matrix[v2-1][v1-1] = 1;

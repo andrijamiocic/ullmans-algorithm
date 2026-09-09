@@ -7,7 +7,8 @@ public:
 
     Graph() = default;
     Graph(std::string filename); 
-    Graph(int v_number, double p); // a random graph with v_number verteces and a probability p of an edge between two vertecees
+    Graph(int v_number, double p); // a random graph with v_number verteces and a probability p of an edge between two verteces
+    Graph(Graph& G, int v_number, double p); // random supergrapg of G with v_number vertices and a probability p of an edge between two verteces
     bool toFile(const std::string& filename);
 
     void printAdjMatrix();

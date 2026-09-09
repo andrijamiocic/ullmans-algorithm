@@ -1,5 +1,6 @@
 #include "Test.h"
 #include <future>
+#include <chrono>
 
 int Test::verification(int n) {
     int krivih = 0;
@@ -56,7 +57,7 @@ int Test::compare(std::vector<std::vector<int>>& v1, std::vector<std::vector<int
         return 1;
 }
 
-void Test::runTest(int g_n, double g_density, double gh_ratio, double h_density, int n, int algorithm){
+int Test::runTest(int g_n, double g_density, double gh_ratio, double h_density, int n, int algorithm){
     std::ofstream out_file("rezultati/undirected_"+std::to_string(algorithm)+ "_"+std::to_string(g_n) + "_"+std::to_string(gh_ratio)+"_"+std::to_string(g_density)+"_"+std::to_string(h_density));
     int timeout = 0;
     int h_n = int(g_n/gh_ratio); 
@@ -65,7 +66,7 @@ void Test::runTest(int g_n, double g_density, double gh_ratio, double h_density,
     << h_density << " alg=" << algorithm << std::endl;
     for (int i = 0; i < n; i++) {
         Graph G(g_n, g_density);
-        Graph H(h_n, h_density);
+        Graph H(G, h_n, h_density);
         long long measured_time = -1;
 
         if (algorithm == 1) {
@@ -87,20 +88,17 @@ void Test::runTest(int g_n, double g_density, double gh_ratio, double h_density,
         }
 
         out_file << measured_time << "\n";
-        
+
         if (measured_time == -1) {
-            timeout++;
-        }
-        if (timeout == 4) {
-            break;
+            timeout=1;
         }
     }
-    std::cout << "done!" << std::endl;
     out_file.close();
-    return;
+    if (timeout) {return 0;}
+    return 1;
 }
 
-void Test::runTestDirected(int g_n, double g_density, double gh_ratio, double h_density, int n, int algorithm){
+int Test::runTestDirected(int g_n, double g_density, double gh_ratio, double h_density, int n, int algorithm){
     std::ofstream out_file("rezultati/directed_"+std::to_string(algorithm)+ "_"+std::to_string(g_n) + "_"+std::to_string(gh_ratio)+"_"+std::to_string(g_density)+"_"+std::to_string(h_density));
     int timeout = 0;
     int h_n = int(g_n/gh_ratio);    
@@ -110,7 +108,7 @@ void Test::runTestDirected(int g_n, double g_density, double gh_ratio, double h_
     
     for (int i = 0; i < n; i++) {
         DirectedGraph G(g_n, g_density);
-        DirectedGraph H(h_n, h_density);
+        DirectedGraph H(G, h_n, h_density);
         long long measured_time = -1;
 
         if (algorithm == 1) {
@@ -134,13 +132,42 @@ void Test::runTestDirected(int g_n, double g_density, double gh_ratio, double h_
         out_file << measured_time << "\n";
         
         if (measured_time == -1) {
-            timeout++;
-        }
-        if (timeout == 2) {
-            break;
+            timeout=1;
         }
     }
-    std::cout << "done!" << std::endl;
     out_file.close();
-    return;
+    if (timeout) {return 0;}
+    return 1;
 }
+
+void Test::fullTest(int algorithm, std::vector<double>& g_p_list, std::vector<double>& gh_ratio_list, std::vector<double>& h_p_list){
+    for (auto g_p : g_p_list){
+        for (auto gh_ratio : gh_ratio_list){
+            for (auto h_p : h_p_list){
+                int g_n = 5;
+                while(1){
+                    if(!runTest(g_n, g_p, gh_ratio, h_p, 10, algorithm)){break;}
+                    std::cout << g_n << std::endl;
+                    g_n++;
+                } 
+            }
+        }
+    }
+    return;
+} 
+
+void Test::fullTestDirected(int algorithm, std::vector<double>& g_p_list, std::vector<double>& gh_ratio_list, std::vector<double>& h_p_list){
+    for (auto g_p : g_p_list){
+        for (auto gh_ratio : gh_ratio_list){
+            for (auto h_p : h_p_list){
+                int g_n = 5;
+                while(1){
+                    if(!runTestDirected(g_n, g_p, gh_ratio, h_p, 10, algorithm)){break;}
+                    std::cout << g_n << std::endl;
+                    g_n++;
+                } 
+            }
+        }
+    }
+    return;
+} 

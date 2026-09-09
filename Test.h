@@ -28,9 +28,10 @@ public:
     
     void store_graphs();
     int verification(int n);
-    void runTest(int g_n, double g_density, double gh_ratio, double h_density, int n, int algorithm); // DFS = 1, Ullman = 2, FS = 3, CM = 4
-    void runTestDirected(int g_n, double g_density, double gh_ratio, double h_density, int n, int algorithm); // DFS = 1, Ullman = 2, FS = 3, CM = 4
-
+    int runTest(int g_n, double g_density, double gh_ratio, double h_density, int n, int algorithm); // DFS = 1, Ullman = 2, FS = 3, CM = 4
+    int runTestDirected(int g_n, double g_density, double gh_ratio, double h_density, int n, int algorithm); // DFS = 1, Ullman = 2, FS = 3, CM = 4
+    void fullTest(int algorithm, std::vector<double>& g_p_list, std::vector<double>& gh_ratio_list, std::vector<double>& h_p_list);
+    void fullTestDirected(int algorithm, std::vector<double>& g_p_list, std::vector<double>& gh_ratio_list, std::vector<double>& h_p_list);
 private:
 
     int compare(std::vector<std::vector<int>>& v1, std::vector<std::vector<int>>& v2);

@@ -8,6 +8,7 @@ public:
     DirectedGraph() = default;
     DirectedGraph(std::string filename); 
     DirectedGraph(int v_number, double p); // a random DirectedGraph with v_number verteces and a probability p of an edge between two vertecees
+    DirectedGraph(DirectedGraph& G, int v_number, double p); // random supergrapg of G with v_number vertices and a probability p of an edge between two verteces
     bool toFile(const std::string& filename);
 
     void printAdjMatrix();

@@ -3,6 +3,7 @@
 #include <fstream>
 #include <string>
 #include <sstream>
+#include <set>
 #include <vector>
 #include <random>
 
@@ -58,6 +59,54 @@ DirectedGraph::DirectedGraph(int v_number, double p){
     }
 }
 
+DirectedGraph::DirectedGraph(DirectedGraph& G, int v_number, double p){
+    v_num = v_number;
+    e_num = 0;
+    adj_matrix = {};
+    adj_list_in = {};    
+    adj_list_out = {};
+    for (int i = 0; i < v_num; i++){
+        std::vector<int> zero_vector(v_num);
+        adj_matrix.push_back(zero_vector);
+        adj_list_in.push_back({});
+        adj_list_out.push_back({});
+    }
+    std::random_device rd;
+    std::mt19937 gen(rd());
+    std::uniform_int_distribution<> distrib(1, v_num);
+    std::vector<int> isomorphism;
+    std::set<int> used;
+    int random_int;
+    for (int i = 0; i < G.get_v_num(); i++){
+        do {
+            random_int = distrib(gen);
+        }
+        while (used.count(random_int));
+        isomorphism.push_back(random_int);
+        used.insert(random_int);
+    }
+    for (int i = 0; i < G.get_v_num(); i++){
+        for (int j = 0; j < G.adj_list_in[i].size(); j++){
+            insertEdge(isomorphism[G.adj_list_in[i][j]-1], isomorphism[i]);
+        }
+        for (int j = 0; j < G.adj_list_out[i].size(); j++){
+            insertEdge(isomorphism[i], isomorphism[G.adj_list_out[i][j]-1]);
+        }
+    }
+    std::random_device rd1;  
+    std::mt19937 gen1(rd1());
+    std::uniform_real_distribution<> distribution(0.0, 1.0);
+    for (int v1 = 0; v1 < v_num; v1++) {
+        for (int v2 = 0; v2 < v_num; v2++) {
+            if (v1 == v2) {continue;}
+            double random_value = distribution(gen1);
+            if (random_value <= p){
+                insertEdge(v1+1, v2+1);
+            }
+        }
+    }
+}
+
 bool DirectedGraph::toFile(const std::string& filename) {
     std::ofstream out_file(filename+".txt");
     
@@ -98,6 +147,7 @@ void DirectedGraph::printAdjList() {
 }
 
 void DirectedGraph::insertEdge(int v1, int v2) {
+    if (edge(v1, v2)){return;}
     adj_matrix[v1-1][v2-1] = 1;
     adj_list_out[v1-1].push_back(v2);
     adj_list_in[v2-1].push_back(v1);
