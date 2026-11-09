@@ -107,6 +107,32 @@ DirectedGraph::DirectedGraph(DirectedGraph& G, int v_number, double p){
     }
 }
 
+DirectedGraph::DirectedGraph(int v_number, int e_number){
+    v_num = v_number;
+    e_num = 0;
+    adj_matrix = {};
+    adj_list_in = {};    
+    adj_list_out = {};
+    for (int i = 0; i < v_num; i++){
+        std::vector<int> zero_vector(v_num);
+        adj_matrix.push_back(zero_vector);
+        adj_list_in.push_back({});
+        adj_list_out.push_back({});
+    }
+    std::random_device rd1;  
+    std::mt19937 gen1(rd1());
+    std::uniform_int_distribution<int> distribuition(1, v_num);
+    for (int i = 0; i < e_number; i++){
+        int inserted = 0;
+        int v1, v2;
+        do {
+            v1 = distribuition(gen1);
+            v2 = distribuition(gen1);
+            inserted = insertEdge(v1, v2);
+        }while (!inserted);
+    }
+}
+
 bool DirectedGraph::toFile(const std::string& filename) {
     std::ofstream out_file(filename+".txt");
     
@@ -146,11 +172,11 @@ void DirectedGraph::printAdjList() {
     return;
 }
 
-void DirectedGraph::insertEdge(int v1, int v2) {
-    if (edge(v1, v2)){return;}
+int DirectedGraph::insertEdge(int v1, int v2) {
+    if (v1 == v2 || edge(v1, v2)){return 0;}
     adj_matrix[v1-1][v2-1] = 1;
     adj_list_out[v1-1].push_back(v2);
     adj_list_in[v2-1].push_back(v1);
     e_num++;
-    return;
+    return 1;
 }

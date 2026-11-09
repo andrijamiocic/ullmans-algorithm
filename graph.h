@@ -8,7 +8,8 @@ public:
     Graph() = default;
     Graph(std::string filename); 
     Graph(int v_number, double p); // a random graph with v_number verteces and a probability p of an edge between two verteces
-    Graph(Graph& G, int v_number, double p); // random supergrapg of G with v_number vertices and a probability p of an edge between two verteces
+    Graph(Graph& G, int v_number, double p); // random supergraph of G with v_number vertices and a probability p of an edge between two verteces
+    Graph(int v_number, int e_number); // randome graph with v_number verteces and e_number edges
     bool toFile(const std::string& filename);
 
     void printAdjMatrix();
@@ -37,6 +38,6 @@ private:
     std::vector<std::vector<int>> adj_matrix;
     std::vector<std::vector<int>> adj_list;
 
-    void insertEdge(int v1, int v2);
+    int insertEdge(int v1, int v2);
 
 };

@@ -19,6 +19,7 @@ protected:
     std::vector<BitVector> M; // Matrix of all the candidates
     std::vector<int> instOrder; // an array holding al G vertices sorted by degree descending
     //void initializeInstOrder(); //initializes instOrder
+    void setNulls(int v, int k);
     int refinementConditionSatisfied(int i, int j);
     int refine_full(); 
     int refine(int r, int c);

@@ -63,3 +63,19 @@ int BitVector::nextOnePosition(int pos) {
     }
     return -1;
 }
+
+void BitVector::setAllOnes() {
+    int blocks = b_vector_data.size();
+    for (int i = 0; i < blocks; i++) {
+        b_vector_data[i] = ~0ULL; 
+    }
+    return;
+}
+
+void BitVector::print() {
+    for (int i = 0; i<size; i++) {
+        std::cout << getElement(i) << " ";
+    }
+    std::cout << std::endl;
+    return;
+}

@@ -6,7 +6,7 @@
 
 class FocusSearch {
 public:
-    FocusSearch( Graph& G, Graph& H ) : G(G), H(H), g_n(G.get_v_num()), h_n(H.get_v_num()) {}
+    FocusSearch( Graph& G, Graph& H ) : G(G), H(H), g_n(G.get_v_num()), h_n(H.get_v_num()), free_verteces(H.get_v_num()) {}
     int findIsomorphisms();
     void printIsomorphisms();
     void measure_time();
@@ -29,7 +29,7 @@ private:
     std::vector<int> instOrder; // a list of G vertices, ordered by instantiation priority
     std::vector<int> lastNeighbour; // lastNeigbour[u]=v <=> v is the last adjacent vertex to u before u
     std::vector<std::vector<int>> nextNeighbours; //nextNeigbours[u] = {v; lastNeighbour[v]=u}
-    std::vector<int> paired_verteces; // paired_verteces[v] = 1 iff some vetrex of G has been instantiated to vertex v of graph H
+    BitVector free_verteces; // paired_verteces[v] = 1 iff none of vertices of G has been instantiated to vertex v of graph H
     std::vector<int> Isomorphism_function; // the main isomporphism function
     void get_k();
     void initializeLastNeighbour();

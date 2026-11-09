@@ -26,12 +26,35 @@ a class to implement tests
 class Test{
 public:
     
-    void store_graphs();
+    void store_graphs(std::vector<double>& g_p_list, std::vector<double>& gh_ratio_list, std::vector<double>& h_p_list, int n);
+    void store_graphs_directed(std::vector<double>& g_p_list, std::vector<double>& gh_ratio_list, std::vector<double>& h_p_list, int n);
     int verification(int n);
-    int runTest(int g_n, double g_density, double gh_ratio, double h_density, int n, int algorithm); // DFS = 1, Ullman = 2, FS = 3, CM = 4
-    int runTestDirected(int g_n, double g_density, double gh_ratio, double h_density, int n, int algorithm); // DFS = 1, Ullman = 2, FS = 3, CM = 4
-    void fullTest(int algorithm, std::vector<double>& g_p_list, std::vector<double>& gh_ratio_list, std::vector<double>& h_p_list);
-    void fullTestDirected(int algorithm, std::vector<double>& g_p_list, std::vector<double>& gh_ratio_list, std::vector<double>& h_p_list);
+    int runTest(int g_n, 
+        double g_density, 
+        double gh_ratio, 
+        double h_density, 
+        int n, 
+        int algorithm); // DFS = 1, Ullman = 2, FS = 3, CM = 4
+    int runTestDirected(int g_n, 
+        double g_density, 
+        double gh_ratio, 
+        double h_density, 
+        int n, 
+        int algorithm); // DFS = 1, Ullman = 2, FS = 3, CM = 4
+    void fullTest(int algorithm, 
+        std::vector<double>& g_p_list, 
+        std::vector<double>& gh_ratio_list, 
+        std::vector<double>& h_p_list,
+        int n,
+        int max
+    );
+    void fullTestDirected(int algorithm, 
+        std::vector<double>& g_p_list, 
+        std::vector<double>& gh_ratio_list, 
+        std::vector<double>& h_p_list,
+        int n,
+        int max
+    );
 private:
 
     int compare(std::vector<std::vector<int>>& v1, std::vector<std::vector<int>>& v2);

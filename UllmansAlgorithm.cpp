@@ -6,17 +6,13 @@ int UllmansAlgorithm::choose_k(int k) {
     int v = instOrder[depth];
     while ( k < h_n - 1 ) {
         k++;
-        if (!paired_verteces[k] && M[depth][v].getElement(k)) {
+        if (M[depth][v].getElement(k)) {
             return k;
         }
     }
     // the bit method implemented below has proven to be slower for a fraction of time for some reason
     /*
-    k = M[depth][depth].nextOnePosition(k);
-    while (k != -1) {
-        if (!paired_verteces[k]){return k;}
-        k = M[depth][depth].nextOnePosition(k);
-    }*/
+    return M[depth][depth].nextOnePosition(k);*/
     return -1;
 }
 
@@ -75,10 +71,10 @@ void UllmansAlgorithm::generateMd() {
     M[depth] = M[depth-1];
     int v = instOrder[depth-1];
     M[depth][v].mask(column_chosen[v]);
-    // this is not part of the 1976 algorithm, but it speeds it up by ~30%
-    /*for (int i = depth; i < g_n; i++) {
-        M[depth][i].setZero(column_chosen[depth-1]);
-    }*/
+    for (int i = depth; i < g_n; i++) {
+        int v_d = instOrder[i];
+        M[depth][v_d].setZero(column_chosen[v]);
+    }
     return;
 }
 
@@ -115,7 +111,6 @@ void UllmansAlgorithm::initialize() {
     M[0] = M_root;
     depth = 0;
     k = -1;
-    paired_verteces.assign(h_n, 0);
     column_chosen.assign(g_n, -1);
     return;
 }
@@ -135,14 +130,12 @@ int UllmansAlgorithm::findIsomorphisms() {
             }
             depth--;
             v = instOrder[depth];
-            paired_verteces[column_chosen[v]] = 0;
             k = column_chosen[v];
             column_chosen[v] = -1;
         }
         else{
             v = instOrder[depth];
             column_chosen[v] = k;
-            paired_verteces[k] = 1;
             if (depth == g_n - 1) {
                 isomorphism_found.push_back(column_chosen); //because the refinement procedure verified the solution, we dont need to
             }

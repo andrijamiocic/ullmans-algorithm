@@ -21,6 +21,8 @@ public:
     void mask(int index);
     bool isZero();
     int nextOnePosition(int pos);
+    void setAllOnes();
+    void print();
 
 private:
     std::vector<uint64_t> b_vector_data; // we use largest possible size of integer

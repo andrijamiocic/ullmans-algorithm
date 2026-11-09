@@ -27,6 +27,28 @@ int CMAlgorithmDirected::choose_k(int k) {
     return res;
 }
 
+void CMAlgorithmDirected::setNulls(int v, int k){
+    for (int i = 0; i < g_n; i++) {
+        if (i != v && M[i].getElement(k)){
+                M[i].setZero(k);
+                M_log_stack_xy.push({i, k});
+                int n = M_log_stack.top();
+                M_log_stack.pop();
+                M_log_stack.push(n+1);
+            }
+    }
+    for (int j = 0; j < h_n; j++) {
+        if (j != k && M[v].getElement(j)){
+                M[v].setZero(j);
+                M_log_stack_xy.push({v, j});
+                int n = M_log_stack.top();
+                M_log_stack.pop();
+                M_log_stack.push(n+1);
+            }
+    }
+    return;
+}
+
 int CMAlgorithmDirected::refinementConditionSatisfied(int i, int j) {
 
     for (int n : G.out_neighbours(i+1)) {
@@ -90,45 +112,39 @@ int CMAlgorithmDirected::refine(int r, int c){
             }
         }
     }
-    int changed = 1;
-    while ( changed ) {
-        changed = 0;
-        for (auto i : G.in_neighbours(r+1)) {
-            int v = i-1;
-            for (auto j : H.in_neighbours(c+1)) {
-                if ( !M[v].getElement(j-1) ) { continue; }
-                // check the condition
-                // if not satisfied -> M_d[i][j] = 0 and changed = 1
-                if ( !refinementConditionSatisfied(v, j-1)) {
-                    M[v].setZero(j-1);
-                    M_log_stack_xy.push({v, j-1});
-                    int n = M_log_stack.top();
-                    M_log_stack.pop();
-                    M_log_stack.push(n+1);
-                    changed = 1;
-                }
+    for (auto i : G.in_neighbours(r+1)) {
+        int v = i-1;
+        for (auto j : H.in_neighbours(c+1)) {
+            if ( !M[v].getElement(j-1) ) { continue; }
+            // check the condition
+            // if not satisfied -> M_d[i][j] = 0 and changed = 1
+            if ( !refinementConditionSatisfied(v, j-1)) {
+                M[v].setZero(j-1);
+                M_log_stack_xy.push({v, j-1});
+                int n = M_log_stack.top();
+                M_log_stack.pop();
+                M_log_stack.push(n+1);
             }
-            //check if the row is zero (that means no more candidates for the node i)
-            if (M[v].isZero()) {return 0;}
         }
-        for (auto i : G.out_neighbours(r+1)) {
-            int v = i-1;
-            for (auto j : H.out_neighbours(c+1)) {
-                if ( !M[v].getElement(j-1) ) { continue; }
-                // check the condition
-                // if not satisfied -> M_d[i][j] = 0 and changed = 1
-                if ( !refinementConditionSatisfied(v, j-1)) {
-                    M[v].setZero(j-1);
-                    M_log_stack_xy.push({v, j-1});
-                    int n = M_log_stack.top();
-                    M_log_stack.pop();
-                    M_log_stack.push(n+1);
-                    changed = 1;
-                }
+        //check if the row is zero (that means no more candidates for the node i)
+        if (M[v].isZero()) {return 0;}
+    }
+    for (auto i : G.out_neighbours(r+1)) {
+        int v = i-1;
+        for (auto j : H.out_neighbours(c+1)) {
+            if ( !M[v].getElement(j-1) ) { continue; }
+            // check the condition
+            // if not satisfied -> M_d[i][j] = 0 and changed = 1
+            if ( !refinementConditionSatisfied(v, j-1)) {
+                M[v].setZero(j-1);
+                M_log_stack_xy.push({v, j-1});
+                int n = M_log_stack.top();
+                M_log_stack.pop();
+                M_log_stack.push(n+1);
             }
-            //check if the row is zero (that means no more candidates for the node i)
-            if (M[v].isZero()) {return 0;}
         }
+        //check if the row is zero (that means no more candidates for the node i)
+        if (M[v].isZero()) {return 0;}
     }
     return 1;
 };
@@ -205,7 +221,7 @@ int CMAlgorithmDirected::findIsomorphisms() {
             v = instOrder[depth];
             column_chosen[v] = k;
             paired_verteces[k] = 1;
-            
+            setNulls(v, k);
             if (refine(v, k)) {
                 if (depth == g_n - 1) {
                     isomorphism_found.push_back(column_chosen);

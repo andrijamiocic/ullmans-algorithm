@@ -126,7 +126,7 @@ void FocusSearchDirected::initialize(){
     InstantiationOrder I(G);
     I.getOrder(instOrder);
     Isomorphism_function.assign(g_n, -1);
-    paired_verteces.assign(h_n, 0);
+    free_verteces.setAllOnes();
     initializeLastNeighbour();
     initializeNextNeighbours();
     depth = 0;
@@ -137,6 +137,7 @@ void FocusSearchDirected::initialize(){
 int FocusSearchDirected::refine(){
     for (int i : nextNeighbours[instOrder[depth]]){
         BitVector domain = M0[i];
+        domain.intersect(free_verteces);
         for (int j = 0; j <= depth; j++){
             int v = instOrder[j];
             if (G.edge(i+1, v+1)){
@@ -165,9 +166,7 @@ void FocusSearchDirected::get_k(){
     while ( k+1 < (int)M0_list[v].size() ) {
         k++;
         int candidate = M0_list[v][k];
-        // if value hasn't already been taken and it is actually in the domain, it is next
-        // the first condition can be removed if we remove values from all domains immediately after instantiation
-        if (!paired_verteces[candidate] && M[v].getElement(candidate)) {
+        if (free_verteces.getElement(candidate) && M[v].getElement(candidate)) {
             M0_index[v] = k;
             return;
         }
@@ -194,7 +193,7 @@ int FocusSearchDirected::findIsomorphisms(){
             depth--;
             
             int prev_v = instOrder[depth];
-            paired_verteces[Isomorphism_function[prev_v]] = 0;
+            free_verteces.setOne(Isomorphism_function[prev_v]);
             k = M0_index[instOrder[depth]];
             Isomorphism_function[prev_v] = -1;
             refinemet_satisfied = 1;
@@ -203,7 +202,7 @@ int FocusSearchDirected::findIsomorphisms(){
             int v = instOrder[depth];
             int value = M0_list[v][k];
             Isomorphism_function[v] = value;
-            paired_verteces[value] = 1;
+            free_verteces.setZero(value);
             if (depth == g_n - 1) {
                 isomorphism_found.push_back(Isomorphism_function); //because the refinement procedure verified the solution, we dont need to
             }
