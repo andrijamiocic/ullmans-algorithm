@@ -32,18 +32,14 @@ int Test::verification(int n) {
 }
 
 void Test::store_graphs(std::vector<double>& g_p_list, std::vector<double>& gh_ratio_list, std::vector<double>& h_p_list, int n) {
-    for (int g_n = 200; g_n < 301; g_n ++){
+    for (int g_n = 5; g_n < 101; g_n ++){
         for (auto g_p : g_p_list){
             for (auto gh_ratio : gh_ratio_list){
                 int h_n = int(g_n/gh_ratio);
                 for (auto h_p : h_p_list){
                     for (int i = 0; i < n; i++){
-                        std::cout << g_n << " " << g_p << " " << gh_ratio << " " << h_p << std::endl;
-                        int g_e = int(g_n*(g_n-1)*g_p/2);
-                        Graph G(g_n, g_e);
-                        std::cout << "G\n";
+                        Graph G(g_n, g_p);
                         Graph H(G, h_n, h_p);
-                        std::cout << "H\n";
                         G.toFile("test_graphs/G_"
                             +std::to_string(g_n)
                             +"_"+std::to_string(g_p)
@@ -66,27 +62,26 @@ void Test::store_graphs(std::vector<double>& g_p_list, std::vector<double>& gh_r
 }
 
 void Test::store_graphs_directed(std::vector<double>& g_p_list, std::vector<double>& gh_ratio_list, std::vector<double>& h_p_list, int n) {
-    for (int g_n = 5; g_n < 16; g_n ++){
+    for (int g_n = 5; g_n < 101; g_n ++){
         for (auto g_p : g_p_list){
             for (auto gh_ratio : gh_ratio_list){
                 int h_n = int(g_n/gh_ratio);
                 for (auto h_p : h_p_list){
                     for (int i = 0; i < n; i++){
-                        int g_e = int(g_n*(g_n-1)*g_p);
-                        DirectedGraph G(g_n, g_e);
-                        //DirectedGraph H(G, h_n, h_p);
+                        DirectedGraph G(g_n, g_p);
+                        DirectedGraph H(G, h_n, h_p);
                         G.toFile("test_graphs_directed/G_"
                             +std::to_string(g_n)
                             +"_"+std::to_string(g_p)
                             +"_"+std::to_string(gh_ratio)
                             +"_"+std::to_string(h_p)
                             +"_"+std::to_string(i));
-                        /*H.toFile("test_graphs_directed/H_"
+                        H.toFile("test_graphs_directed/H_"
                             +std::to_string(g_n)
                             +"_"+std::to_string(g_p)
                             +"_"+std::to_string(gh_ratio)
                             +"_"+std::to_string(h_p)
-                            +"_"+std::to_string(i));*/
+                            +"_"+std::to_string(i));
                     }
                 }
             }
@@ -225,7 +220,7 @@ void Test::fullTest(int algorithm, std::vector<double>& g_p_list, std::vector<do
     for (auto g_p : g_p_list){
         for (auto gh_ratio : gh_ratio_list){
             for (auto h_p : h_p_list){
-                int g_n = 200;
+                int g_n = 5;
                 while(g_n <= max){
                     if(!runTest(g_n, g_p, gh_ratio, h_p, n, algorithm)){break;}
                     std::cout << g_n << std::endl;
@@ -242,7 +237,7 @@ void Test::fullTestDirected(int algorithm, std::vector<double>& g_p_list, std::v
     for (auto g_p : g_p_list){
         for (auto gh_ratio : gh_ratio_list){
             for (auto h_p : h_p_list){
-                int g_n = 76;
+                int g_n = 5;
                 while(g_n <= max){
                     if(!runTestDirected(g_n, g_p, gh_ratio, h_p, n, algorithm)){break;}
                     std::cout << g_n << std::endl;

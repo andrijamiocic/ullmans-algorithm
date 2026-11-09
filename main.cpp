@@ -27,19 +27,19 @@ int main(int argc, char* argv[]){
     t.store_graphs(g_p_list, gh_ratio_list, h_p_list, n);
     t.store_graphs_directed(g_p_list, gh_ratio_list, h_p_list, n);
     
-    t.fullTest(3, g_p_list, gh_ratio_list, h_p_list, n, 300);
-    t.fullTest(4, g_p_list, gh_ratio_list, h_p_list, n, 300);
+    t.fullTest(3, g_p_list, gh_ratio_list, h_p_list, n, 100);
+    t.fullTest(4, g_p_list, gh_ratio_list, h_p_list, n, 100);
     t.fullTest(2, g_p_list, gh_ratio_list, h_p_list, n, 100);
-    t.fullTest(1, g_p_list, gh_ratio_list, h_p_list, n, 15);
+    t.fullTest(1, g_p_list, gh_ratio_list, h_p_list, n, 100);
 
    
 
     std::cout << "Undirected done!";
 
-    t.fullTestDirected(3, g_p_list, gh_ratio_list, h_p_list, n, 15);
-    t.fullTestDirected(4, g_p_list, gh_ratio_list, h_p_list, n, 15);
+    t.fullTestDirected(3, g_p_list, gh_ratio_list, h_p_list, n, 100);
+    t.fullTestDirected(4, g_p_list, gh_ratio_list, h_p_list, n, 100);
     t.fullTestDirected(2, g_p_list, gh_ratio_list, h_p_list, n, 100);
-    t.fullTestDirected(1, g_p_list, gh_ratio_list, h_p_list, n, 15);
+    t.fullTestDirected(1, g_p_list, gh_ratio_list, h_p_list, n, 100);
 
     std::cout << "Undirected done!";
 
